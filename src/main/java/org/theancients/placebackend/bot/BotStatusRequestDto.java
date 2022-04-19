@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 public class BotStatusRequestDto {
 
     private String username;
+    private int status;
 
     public String getUsername() {
         return username;
@@ -13,4 +14,13 @@ public class BotStatusRequestDto {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
 }

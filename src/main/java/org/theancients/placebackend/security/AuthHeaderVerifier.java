@@ -1,5 +1,6 @@
 package org.theancients.placebackend.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,12 +22,15 @@ import java.util.Set;
 @Component
 public class AuthHeaderVerifier extends OncePerRequestFilter {
 
+    @Value("${application.botKey}")
+    private String botKey;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
-        if (authorization != null) {
+        if (authorization != null && botKey != null) {
             if (!authorization.startsWith("Bearer ")) {
-                if (authorization.equals("grDRme7WCtCPJ7CRHqAMp9MBfYPfDTHHfrjpQRfSj3osFncaicVVgu2CS4o6VVWw")) {
+                if (authorization.equals(botKey)) {
                     Set<GrantedAuthority> authorities = new HashSet<>();
                     authorities.add(new SimpleGrantedAuthority("ROLE_BOT"));
                     Authentication authentication = new UsernamePasswordAuthenticationToken(null, null, authorities);
