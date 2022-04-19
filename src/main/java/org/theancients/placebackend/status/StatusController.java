@@ -14,8 +14,8 @@ public class StatusController {
     private StatusService statusService;
 
     @PutMapping
-    private StatusOutDto statusUpdate(@RequestBody StatusInDto statusInDto) {
-        return statusService.statusUpdate(statusInDto);
+    public StatusResponseDto statusUpdate(@RequestBody StatusRequestDto statusRequestDto) {
+        return statusService.statusUpdate(statusRequestDto);
     }
 
 }

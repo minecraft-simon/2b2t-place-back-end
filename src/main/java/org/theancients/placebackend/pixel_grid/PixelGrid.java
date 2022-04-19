@@ -1,15 +1,23 @@
 package org.theancients.placebackend.pixel_grid;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 public class PixelGrid {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(length = 64000)
     private byte[] pixels;
+
+    @Override
+    public String toString() {
+        return "PixelGrid{" +
+                "id=" + id +
+                ", pixels=" + Arrays.toString(pixels) +
+                '}';
+    }
 
     public long getId() {
         return id;

@@ -1,5 +1,6 @@
 package org.theancients.placebackend.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,9 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private AuthHeaderVerifier authHeaderVerifier;
+
     @Value("${application.corsEnabled:false}")
     private boolean corsEnabled;
 
@@ -37,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilterAfter(authHeaderVerifier, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/status", "/pixel-grid").permitAll()
                 .anyRequest()

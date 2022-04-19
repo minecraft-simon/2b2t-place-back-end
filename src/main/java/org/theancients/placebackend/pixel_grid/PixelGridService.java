@@ -1,6 +1,7 @@
 package org.theancients.placebackend.pixel_grid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -9,10 +10,7 @@ import org.theancients.placebackend.highlight.Highlight;
 import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -21,11 +19,24 @@ public class PixelGridService {
     @Autowired
     private PixelGridRepository pixelGridRepository;
 
+    @Value("${application.pixelGridId:2}")
+    private long pixelGridId;
+
     private PixelGrid pixelGrid;
 
     @PostConstruct
     private void init() {
-        pixelGrid = pixelGridRepository.findById(1L).get();
+        Optional<PixelGrid> optionalPixelGrid = pixelGridRepository.findById(pixelGridId);
+        if (optionalPixelGrid.isPresent()) {
+            this.pixelGrid = optionalPixelGrid.get();
+        } else {
+            PixelGrid pixelGrid = new PixelGrid();
+            pixelGrid.setId(pixelGridId);
+            byte[] pixels = new byte[16384];
+            Arrays.fill(pixels, (byte) 0);
+            pixelGrid.setPixels(pixels);
+            this.pixelGrid = pixelGrid;
+        }
     }
 
     @Scheduled(fixedRate = 10000)
@@ -48,7 +59,5 @@ public class PixelGridService {
         pixelGrid.getPixels()[pos] = pixelDto.getColor();
         return HttpStatus.OK;
     }
-
-
 
 }

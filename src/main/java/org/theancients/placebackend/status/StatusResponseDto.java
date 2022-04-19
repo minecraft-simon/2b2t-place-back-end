@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatusOutDto {
+public class StatusResponseDto {
 
     private List<Point> highlights = new ArrayList<>();
     private PixelGrid pixelGrid;

@@ -2,7 +2,7 @@ package org.theancients.placebackend.status;
 
 import java.awt.*;
 
-public class StatusInDto {
+public class StatusRequestDto {
 
     private String userId;
     private Point highlightPos;

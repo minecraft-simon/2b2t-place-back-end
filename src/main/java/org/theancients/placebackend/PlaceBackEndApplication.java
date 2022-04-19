@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication(exclude= {UserDetailsServiceAutoConfiguration.class}) // exclude is needed to disable default password
 public class PlaceBackEndApplication {
-	public static void main(String[] args)
+	public static void main(String[] args
 		SpringApplication.run(PlaceBackEndApplication.class, args);
 	}
 } */

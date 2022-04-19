@@ -17,13 +17,13 @@ public class StatusService {
     @Autowired
     private PixelGridService pixelGridService;
 
-    public StatusOutDto statusUpdate(StatusInDto statusInDto) {
-        StatusOutDto statusOutDto = new StatusOutDto();
-        List<Point> highlights = highlightService.updateHighlight(statusInDto.getUserId(), statusInDto.getHighlightPos());
-        statusOutDto.setHighlights(highlights);
-        statusOutDto.setPixelGrid(pixelGridService.getPixelGrid());
+    public StatusResponseDto statusUpdate(StatusRequestDto statusRequestDto) {
+        StatusResponseDto statusResponseDto = new StatusResponseDto();
+        List<Point> highlights = highlightService.updateHighlight(statusRequestDto.getUserId(), statusRequestDto.getHighlightPos());
+        statusResponseDto.setHighlights(highlights);
+        statusResponseDto.setPixelGrid(pixelGridService.getPixelGrid());
 
-        return statusOutDto;
+        return statusResponseDto;
     }
 
 }
