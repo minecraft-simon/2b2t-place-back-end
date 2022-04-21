@@ -53,11 +53,6 @@ public class HighlightService {
     }
 
     public List<Point> updateHighlight(String userId, Point point) {
-        // reject update if userId is sus
-        if (userId == null || userId.length() < 16 || userId.length() > 32 || !StringUtils.isAlphanumeric(userId)) {
-            return new ArrayList<>();
-        }
-
         // only update highlight if a valid point was selected
         if (point != null && point.x >= 0 && point.x < 128 && point.y >= 0 && point.y < 128) {
             Optional<Highlight> optionalHighlight = highlightRepository.findById(userId);

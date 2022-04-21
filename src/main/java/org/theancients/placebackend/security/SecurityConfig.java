@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterAfter(authHeaderVerifier, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/status", "/pixel-grid").permitAll()
+                .antMatchers("/status", "/authentication/**", "/pixel-grid").permitAll()
                 .anyRequest()
                 .authenticated()
         ;

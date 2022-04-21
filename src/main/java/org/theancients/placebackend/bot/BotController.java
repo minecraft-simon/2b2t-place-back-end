@@ -1,13 +1,10 @@
 package org.theancients.placebackend.bot;
 
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.theancients.placebackend.status.StatusRequestDto;
-import org.theancients.placebackend.status.StatusResponseDto;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/bot")
@@ -16,7 +13,23 @@ public class BotController {
     @PutMapping
     @RolesAllowed("ROLE_BOT")
     public BotStatusResponseDto botStatusUpdate(@RequestBody BotStatusRequestDto botStatusRequestDto) {
-        return new BotStatusResponseDto();
+        System.out.println(botStatusRequestDto.getUsername() + " sent a status update");
+        List<int[]> jobs = new ArrayList<>();
+        jobs.add(new int[]{2273, 17, 97, 97, 1});
+        jobs.add(new int[]{7218, 56, 97, 50, 1});
+        jobs.add(new int[]{4473, 34, 97, 121, 1});
+        jobs.add(new int[]{11415, 89, 97, 23, 1});
+        jobs.add(new int[]{16261, 127, 97, 5, 1});
+        BotStatusResponseDto response = new BotStatusResponseDto();
+        response.setJobs(jobs);
+        return response;
+    }
+
+    @PostMapping("message")
+    @RolesAllowed("ROLE_BOT")
+    public String botMessage(@RequestBody BotMessageDto botMessageDto) {
+        System.out.println(botMessageDto);
+        return "{}";
     }
 
 }

@@ -55,7 +55,7 @@ public class PixelGridService {
         if (pixelDto.getColor() < 0 || pixelDto.getColor() > 15) {
             return HttpStatus.BAD_REQUEST;
         }
-        int pos = pixelDto.getY() + pixelDto.getX() * 128;
+        int pos = pixelDto.getX() * 128 + pixelDto.getY();
         pixelGrid.getPixels()[pos] = pixelDto.getColor();
         return HttpStatus.OK;
     }

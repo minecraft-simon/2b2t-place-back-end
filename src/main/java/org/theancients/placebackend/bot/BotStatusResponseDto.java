@@ -7,13 +7,14 @@ import java.util.List;
 
 public class BotStatusResponseDto {
 
-    private List<PixelDto> jobs = new ArrayList<>();
+    private List<int[]> jobs = new ArrayList<>();
 
-    public List<PixelDto> getJobs() {
+    public List<int[]> getJobs() {
         return jobs;
     }
 
-    public void setJobs(List<PixelDto> jobs) {
+    public void setJobs(List<int[]> jobs) {
         this.jobs = jobs;
     }
+
 }

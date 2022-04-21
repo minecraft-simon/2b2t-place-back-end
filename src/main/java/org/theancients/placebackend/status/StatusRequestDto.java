@@ -4,23 +4,23 @@ import java.awt.*;
 
 public class StatusRequestDto {
 
-    private String userId;
+    private String sessionId;
     private Point highlightPos;
 
     @Override
     public String toString() {
-        return "StatusInDto{" +
-                "userId='" + userId + '\'' +
+        return "StatusRequestDto{" +
+                "sessionId='" + sessionId + '\'' +
                 ", highlightPos=" + highlightPos +
                 '}';
     }
 
-    public String getUserId() {
-        return userId;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public Point getHighlightPos() {
