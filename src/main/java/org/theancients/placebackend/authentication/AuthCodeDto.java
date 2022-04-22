@@ -3,7 +3,8 @@ package org.theancients.placebackend.authentication;
 public class AuthCodeDto {
 
     private String authCode;
-    private int expirySeconds;
+    private long expirySeconds;
+    private String botName;
 
     public String getAuthCode() {
         return authCode;
@@ -13,12 +14,19 @@ public class AuthCodeDto {
         this.authCode = authCode;
     }
 
-    public int getExpirySeconds() {
+    public long getExpirySeconds() {
         return expirySeconds;
     }
 
-    public void setExpirySeconds(int expirySeconds) {
+    public void setExpirySeconds(long expirySeconds) {
         this.expirySeconds = expirySeconds;
     }
 
+    public String getBotName() {
+        return botName;
+    }
+
+    public void setBotName(String botName) {
+        this.botName = botName;
+    }
 }

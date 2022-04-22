@@ -4,14 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.theancients.placebackend.highlight.Highlight;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class AnonymousSessionService {
@@ -26,7 +23,7 @@ public class AnonymousSessionService {
         Instant now = Instant.now();
         for (AnonymousSession session : sessions) {
             long lastPing = Duration.between(session.getLastPing(), now).getSeconds();
-            if (lastPing > 12) { // delete session after 12 seconds of inactivity
+            if (lastPing > 20) { // delete session after 20 seconds of inactivity
                 toDelete.add(session);
             }
         }

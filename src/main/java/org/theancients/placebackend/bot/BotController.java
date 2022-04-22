@@ -13,7 +13,6 @@ public class BotController {
     @PutMapping
     @RolesAllowed("ROLE_BOT")
     public BotStatusResponseDto botStatusUpdate(@RequestBody BotStatusRequestDto botStatusRequestDto) {
-        System.out.println(botStatusRequestDto.getUsername() + " sent a status update");
         List<int[]> jobs = new ArrayList<>();
         jobs.add(new int[]{2273, 17, 97, 97, 1});
         jobs.add(new int[]{7218, 56, 97, 50, 1});
@@ -28,7 +27,6 @@ public class BotController {
     @PostMapping("message")
     @RolesAllowed("ROLE_BOT")
     public String botMessage(@RequestBody BotMessageDto botMessageDto) {
-        System.out.println(botMessageDto);
         return "{}";
     }
 
