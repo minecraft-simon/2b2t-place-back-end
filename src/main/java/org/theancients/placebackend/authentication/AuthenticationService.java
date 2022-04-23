@@ -3,12 +3,13 @@ package org.theancients.placebackend.authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.theancients.placebackend.anonymous_session.AnonymousSession;
+import org.theancients.placebackend.anonymous_session.AnonymousSessionRepository;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -17,7 +18,10 @@ public class AuthenticationService {
     @Autowired
     private PendingAuthenticationRepository pendingAuthenticationRepository;
 
-    @Scheduled(fixedRate = 3000)
+    @Autowired
+    private AnonymousSessionRepository anonymousSessionRepository;
+
+    @Scheduled(fixedRate = 30000)
     private void deleteExpiredPendingAuths() {
         List<PendingAuthentication> pending = pendingAuthenticationRepository.findAll();
         List<PendingAuthentication> toDelete = new ArrayList<>();
@@ -31,7 +35,7 @@ public class AuthenticationService {
     }
 
     public AuthCodeDto generateAuthCode(String sessionId) {
-        if (sessionId != null) {
+        if (sessionId != null && anonymousSessionRepository.existsById(sessionId)) {
             // create pending authentication
             String authCode = generateAuthCode();
             PendingAuthentication pendingAuthentication = new PendingAuthentication(sessionId, authCode);
@@ -43,6 +47,18 @@ public class AuthenticationService {
             return authCodeDto;
         } else {
             return null;
+        }
+    }
+
+    public void tryToAuthenticate(String player, String message) {
+        message = message.toUpperCase();
+        Optional<PendingAuthentication> optionalPendingAuthentication = pendingAuthenticationRepository.findByAuthCode(message);
+        if (optionalPendingAuthentication.isPresent()) {
+            PendingAuthentication pendingAuthentication = optionalPendingAuthentication.get();
+            if (pendingAuthentication.getIdentity() == null) {
+                pendingAuthentication.setIdentity(player);
+                pendingAuthenticationRepository.save(pendingAuthentication);
+            }
         }
     }
 

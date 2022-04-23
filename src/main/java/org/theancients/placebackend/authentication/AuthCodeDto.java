@@ -4,7 +4,7 @@ public class AuthCodeDto {
 
     private String authCode;
     private long expirySeconds;
-    private String botName;
+    private String botName = "minecraft_simon";
 
     public String getAuthCode() {
         return authCode;

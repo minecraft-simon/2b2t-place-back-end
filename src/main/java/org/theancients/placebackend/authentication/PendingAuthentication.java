@@ -12,14 +12,16 @@ public class PendingAuthentication {
     private String sessionId;
     private String authCode;
     private Instant expiry;
+    private String identity;
 
     public PendingAuthentication() {
+
     }
 
     public PendingAuthentication(String sessionId, String authCode) {
         this.sessionId = sessionId;
         this.authCode = authCode;
-        this.expiry = Instant.now().plus(10, ChronoUnit.MINUTES);
+        expiry = Instant.now().plus(10, ChronoUnit.MINUTES);
     }
 
     public String getSessionId() {
@@ -44,6 +46,14 @@ public class PendingAuthentication {
 
     public void setExpiry(Instant expiry) {
         this.expiry = expiry;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
     }
 
 }

@@ -10,6 +10,7 @@ public class StatusResponseDto {
 
     private List<Point> highlights = new ArrayList<>();
     private PixelGrid pixelGrid;
+    private String authToken;
     private int pollingDelay = 500;
 
     public List<Point> getHighlights() {
@@ -26,6 +27,14 @@ public class StatusResponseDto {
 
     public void setPixelGrid(PixelGrid pixelGrid) {
         this.pixelGrid = pixelGrid;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
     public int getPollingDelay() {
