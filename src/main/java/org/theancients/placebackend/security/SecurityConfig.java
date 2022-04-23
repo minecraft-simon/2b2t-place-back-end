@@ -1,5 +1,6 @@
 package org.theancients.placebackend.security;
 
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 @Configuration
@@ -23,10 +26,18 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private AuthHeaderVerifier authHeaderVerifier;
+    private AuthHeaderFilter authHeaderFilter;
 
     @Value("${application.corsEnabled:false}")
     private boolean corsEnabled;
+
+    @Value("${application.jwt.secretKey}")
+    private String secretKeyString;
+
+    @Bean
+    public SecretKey secretKey() {
+        return Keys.hmacShaKeyFor(secretKeyString.getBytes(StandardCharsets.UTF_8));
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -41,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterAfter(authHeaderVerifier, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(authHeaderFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/status", "/authentication/**", "/pixel-grid").permitAll()
                 .anyRequest()

@@ -1,13 +1,11 @@
 package org.theancients.placebackend.security;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class AuthHeaderVerifier extends OncePerRequestFilter {
+public class AuthHeaderFilter extends OncePerRequestFilter {
 
     @Value("${application.botKey}")
     private String botKey;

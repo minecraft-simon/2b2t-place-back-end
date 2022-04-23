@@ -1,13 +1,16 @@
 package org.theancients.placebackend.authentication;
 
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.anonymous_session.AnonymousSessionRepository;
 
+import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,6 +23,9 @@ public class AuthenticationService {
 
     @Autowired
     private AnonymousSessionRepository anonymousSessionRepository;
+
+    @Autowired
+    private SecretKey secretKey;
 
     @Scheduled(fixedRate = 30000)
     private void deleteExpiredPendingAuths() {
@@ -50,18 +56,6 @@ public class AuthenticationService {
         }
     }
 
-    public void tryToAuthenticate(String player, String message) {
-        message = message.toUpperCase();
-        Optional<PendingAuthentication> optionalPendingAuthentication = pendingAuthenticationRepository.findByAuthCode(message);
-        if (optionalPendingAuthentication.isPresent()) {
-            PendingAuthentication pendingAuthentication = optionalPendingAuthentication.get();
-            if (pendingAuthentication.getIdentity() == null) {
-                pendingAuthentication.setIdentity(player);
-                pendingAuthenticationRepository.save(pendingAuthentication);
-            }
-        }
-    }
-
     private String generateAuthCode() {
         long existingCount = pendingAuthenticationRepository.count();
         int length = Math.max((int) Math.ceil(Math.log10(existingCount)), 3);
@@ -75,6 +69,38 @@ public class AuthenticationService {
             }
         } while (pendingAuthenticationRepository.existsByAuthCode(authCode)); // repeat if auth code is already in use
         return authCode;
+    }
+
+    public void tryToAuthenticate(String player, String message) {
+        message = message.toUpperCase();
+        Optional<PendingAuthentication> optionalPendingAuthentication = pendingAuthenticationRepository.findByAuthCode(message);
+        if (optionalPendingAuthentication.isPresent()) {
+            PendingAuthentication pendingAuthentication = optionalPendingAuthentication.get();
+            if (pendingAuthentication.getIdentity() == null) {
+                pendingAuthentication.setIdentity(player);
+                pendingAuthenticationRepository.save(pendingAuthentication);
+            }
+        }
+    }
+
+    public String getAuthTokenIfAuthenticated(String sessionId) {
+        Optional<PendingAuthentication> optionalPendingAuthentication = pendingAuthenticationRepository.findBySessionId(sessionId);
+        if (optionalPendingAuthentication.isPresent()) {
+            PendingAuthentication pendingAuthentication = optionalPendingAuthentication.get();
+            if (pendingAuthentication.getIdentity() != null) {
+                return generateAuthToken(pendingAuthentication.getIdentity());
+            }
+        }
+        return null;
+    }
+
+    public String generateAuthToken(String player) {
+        String token = Jwts.builder()
+                .setSubject(player)
+                .setIssuedAt(new Date())
+                .signWith(secretKey)
+                .compact();
+        return "Bearer " + token;
     }
 
 }
