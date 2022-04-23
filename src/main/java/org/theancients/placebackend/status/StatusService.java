@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.anonymous_session.AnonymousSessionService;
 import org.theancients.placebackend.authentication.AuthenticationService;
+import org.theancients.placebackend.authentication.PendingAuthentication;
 import org.theancients.placebackend.highlight.HighlightService;
 import org.theancients.placebackend.pixel_grid.PixelGridService;
 
@@ -26,20 +27,25 @@ public class StatusService {
     private AuthenticationService authenticationService;
 
     public StatusResponseDto statusUpdate(StatusRequestDto statusRequestDto) {
-        StatusResponseDto statusResponseDto = new StatusResponseDto();
-
         String sessionId = statusRequestDto.getSessionId();
         boolean sessionValid = anonymousSessionService.refreshSession(sessionId);
         if (sessionValid) {
+            StatusResponseDto statusResponseDto = new StatusResponseDto();
+
+            PendingAuthentication pendingAuthentication = authenticationService.getPendingAuthentication(sessionId);
+            if (pendingAuthentication != null) {
+                statusResponseDto.setIdentity(pendingAuthentication.getIdentity());
+                statusResponseDto.setAuthToken(pendingAuthentication.getAuthToken());
+            }
+
             List<Point> highlights = highlightService.updateHighlight(sessionId, statusRequestDto.getHighlightPos());
             statusResponseDto.setHighlights(highlights);
             statusResponseDto.setPixelGrid(pixelGridService.getPixelGrid());
-            if (statusRequestDto.isRequestAuthToken()) {
-                statusResponseDto.setAuthToken(authenticationService.getAuthTokenIfAuthenticated(sessionId));
-            }
+
+            return statusResponseDto;
         }
 
-        return statusResponseDto;
+        return null;
     }
 
 }

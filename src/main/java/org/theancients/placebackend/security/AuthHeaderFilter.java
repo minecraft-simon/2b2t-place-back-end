@@ -28,6 +28,7 @@ public class AuthHeaderFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
         if (authorization != null && botKey != null) {
             if (!authorization.startsWith("Bearer ")) {
+                // try to authenticate as bot
                 if (authorization.equals(botKey)) {
                     Set<GrantedAuthority> authorities = new HashSet<>();
                     authorities.add(new SimpleGrantedAuthority("ROLE_BOT"));
@@ -35,6 +36,8 @@ public class AuthHeaderFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             } else {
+                // try to authenticate as player
+                String token = authorization.replace("Bearer ", "");
 
             }
         }

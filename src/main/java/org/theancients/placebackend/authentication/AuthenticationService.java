@@ -75,23 +75,17 @@ public class AuthenticationService {
         message = message.toUpperCase();
         Optional<PendingAuthentication> optionalPendingAuthentication = pendingAuthenticationRepository.findByAuthCode(message);
         if (optionalPendingAuthentication.isPresent()) {
-            PendingAuthentication pendingAuthentication = optionalPendingAuthentication.get();
-            if (pendingAuthentication.getIdentity() == null) {
-                pendingAuthentication.setIdentity(player);
-                pendingAuthenticationRepository.save(pendingAuthentication);
+            PendingAuthentication pendingAuth = optionalPendingAuthentication.get();
+            if (pendingAuth.getIdentity() == null && pendingAuth.getAuthToken() == null) {
+                pendingAuth.setIdentity(player);
+                pendingAuth.setAuthToken(generateAuthToken(player));
+                pendingAuthenticationRepository.save(pendingAuth);
             }
         }
     }
 
-    public String getAuthTokenIfAuthenticated(String sessionId) {
-        Optional<PendingAuthentication> optionalPendingAuthentication = pendingAuthenticationRepository.findBySessionId(sessionId);
-        if (optionalPendingAuthentication.isPresent()) {
-            PendingAuthentication pendingAuthentication = optionalPendingAuthentication.get();
-            if (pendingAuthentication.getIdentity() != null) {
-                return generateAuthToken(pendingAuthentication.getIdentity());
-            }
-        }
-        return null;
+    public PendingAuthentication getPendingAuthentication(String sessionId) {
+        return pendingAuthenticationRepository.findBySessionId(sessionId).orElse(null);
     }
 
     public String generateAuthToken(String player) {
@@ -101,6 +95,12 @@ public class AuthenticationService {
                 .signWith(secretKey)
                 .compact();
         return "Bearer " + token;
+    }
+
+    public void deletePendingAuthentication(String sessionId) {
+        if (sessionId != null && pendingAuthenticationRepository.existsBySessionId(sessionId)) {
+            pendingAuthenticationRepository.deleteById(sessionId);
+        }
     }
 
 }

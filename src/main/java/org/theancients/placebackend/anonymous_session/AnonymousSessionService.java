@@ -31,7 +31,7 @@ public class AnonymousSessionService {
     }
 
     public boolean refreshSession(String sessionId) {
-        if (sessionId == null || sessionId.length() < 16 || sessionId.length() > 32 || !StringUtils.isAlphanumeric(sessionId)) {
+        if (sessionId == null || sessionId.length() < 32 || sessionId.length() > 64 || !StringUtils.isAlphanumeric(sessionId)) {
             return false;
         }
         AnonymousSession anonymousSession = new AnonymousSession(sessionId);

@@ -1,5 +1,6 @@
 package org.theancients.placebackend.authentication;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.Instant;
@@ -13,6 +14,8 @@ public class PendingAuthentication {
     private String authCode;
     private Instant expiry;
     private String identity;
+    @Column(length = 1000)
+    private String authToken;
 
     public PendingAuthentication() {
 
@@ -56,4 +59,11 @@ public class PendingAuthentication {
         this.identity = identity;
     }
 
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 }
