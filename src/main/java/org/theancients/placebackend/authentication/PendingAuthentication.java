@@ -24,7 +24,7 @@ public class PendingAuthentication {
     public PendingAuthentication(String sessionId, String authCode) {
         this.sessionId = sessionId;
         this.authCode = authCode;
-        expiry = Instant.now().plus(10, ChronoUnit.MINUTES);
+        expiry = Instant.now().plus(60, ChronoUnit.SECONDS);
     }
 
     public String getSessionId() {

@@ -27,7 +27,7 @@ public class AuthenticationService {
     @Autowired
     private SecretKey secretKey;
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 5000)
     private void deleteExpiredPendingAuths() {
         List<PendingAuthentication> pending = pendingAuthenticationRepository.findAll();
         List<PendingAuthentication> toDelete = new ArrayList<>();
