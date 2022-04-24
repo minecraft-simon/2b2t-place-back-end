@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.theancients.placebackend.recorded_pixel.RecordedPixelService;
 
 import javax.annotation.security.RolesAllowed;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/pixels")
@@ -19,8 +21,8 @@ public class PixelGridController {
 
     @PutMapping
     @RolesAllowed("ROLE_AUTHENTICATED_USER")
-    public ResponseEntity<PixelDto> updatePixel(@RequestBody PixelDto pixelDto) {
-        HttpStatus httpStatus = pixelGridService.updatePixel(pixelDto);
+    public ResponseEntity<PixelDto> updatePixel(Principal principal, @RequestBody PixelDto pixelDto) {
+        HttpStatus httpStatus = pixelGridService.updatePixel(principal.getName(), pixelDto);
         return ResponseEntity.status(httpStatus).body(pixelDto);
     }
 
