@@ -8,14 +8,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
+
 @RestController
-@RequestMapping("/pixel-grid")
+@RequestMapping("/pixels")
 public class PixelGridController {
 
     @Autowired
     private PixelGridService pixelGridService;
 
     @PutMapping
+    @RolesAllowed("ROLE_AUTHENTICATED_USER")
     public ResponseEntity<PixelDto> updatePixel(@RequestBody PixelDto pixelDto) {
         HttpStatus httpStatus = pixelGridService.updatePixel(pixelDto);
         return ResponseEntity.status(httpStatus).body(pixelDto);
