@@ -16,7 +16,7 @@ public class RecordedPixel {
     private int x;
     private int y;
     private byte color;
-    private String playerName;
+    private long playerId;
     private Instant instant = Instant.now();
 
     public long getId() {
@@ -51,12 +51,12 @@ public class RecordedPixel {
         this.color = color;
     }
 
-    public String getPlayerName() {
-        return playerName;
+    public long getPlayerId() {
+        return playerId;
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
+    public void setPlayerId(long playerId) {
+        this.playerId = playerId;
     }
 
     public Instant getInstant() {

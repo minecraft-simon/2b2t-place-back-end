@@ -13,6 +13,8 @@ public class StatusResponseDto {
     private String identity;
     private String authToken;
     private int pollingDelay = 1000;
+    private boolean maintenanceMode;
+    private boolean sessionExpired;
 
     public List<Point> getHighlights() {
         return highlights;
@@ -53,4 +55,21 @@ public class StatusResponseDto {
     public void setPollingDelay(int pollingDelay) {
         this.pollingDelay = pollingDelay;
     }
+
+    public boolean isMaintenanceMode() {
+        return maintenanceMode;
+    }
+
+    public void setMaintenanceMode(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
+    }
+
+    public boolean isSessionExpired() {
+        return sessionExpired;
+    }
+
+    public void setSessionExpired(boolean sessionExpired) {
+        this.sessionExpired = sessionExpired;
+    }
+
 }

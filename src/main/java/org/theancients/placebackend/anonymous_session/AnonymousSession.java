@@ -10,13 +10,13 @@ public class AnonymousSession {
     @Id
     private String sessionId;
     private Instant lastPing;
+    private Instant created;
 
     public AnonymousSession() {
     }
 
-    public AnonymousSession(String sessionId) {
-        this.sessionId = sessionId;
-        lastPing = Instant.now();
+    public AnonymousSession(Instant created) {
+        this.created = created;
     }
 
     public String getSessionId() {
@@ -33,6 +33,14 @@ public class AnonymousSession {
 
     public void setLastPing(Instant lastPing) {
         this.lastPing = lastPing;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
     }
 
 }

@@ -34,7 +34,10 @@ public class AnonymousSessionService {
         if (sessionId == null || sessionId.length() < 32 || sessionId.length() > 64 || !StringUtils.isAlphanumeric(sessionId)) {
             return false;
         }
-        AnonymousSession anonymousSession = new AnonymousSession(sessionId);
+        Instant now = Instant.now();
+        AnonymousSession anonymousSession = anonymousSessionRepository.findBySessionId(sessionId).orElse(new AnonymousSession(now));
+        anonymousSession.setSessionId(sessionId);
+        anonymousSession.setLastPing(now);
         anonymousSessionRepository.save(anonymousSession);
         return true;
     }

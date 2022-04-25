@@ -7,6 +7,8 @@ import org.theancients.placebackend.authentication.AuthenticationService;
 import org.theancients.placebackend.authentication.PendingAuthentication;
 import org.theancients.placebackend.highlight.HighlightService;
 import org.theancients.placebackend.pixel_grid.PixelGridService;
+import org.theancients.placebackend.setting.SettingRepository;
+import org.theancients.placebackend.setting.SettingService;
 
 import java.awt.*;
 import java.util.List;
@@ -26,6 +28,9 @@ public class StatusService {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private SettingService settingService;
+
     public StatusResponseDto statusUpdate(StatusRequestDto statusRequestDto) {
         String sessionId = statusRequestDto.getSessionId();
         boolean sessionValid = anonymousSessionService.refreshSession(sessionId);
@@ -41,6 +46,8 @@ public class StatusService {
             List<Point> highlights = highlightService.updateHighlight(sessionId, statusRequestDto.getHighlightPos());
             statusResponseDto.setHighlights(highlights);
             statusResponseDto.setPixelGrid(pixelGridService.getPixelGrid());
+
+            statusResponseDto.setMaintenanceMode(settingService.getBoolean("maintenance_mode", false));
 
             return statusResponseDto;
         }
