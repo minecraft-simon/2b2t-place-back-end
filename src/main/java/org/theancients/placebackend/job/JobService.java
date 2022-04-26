@@ -66,7 +66,7 @@ public class JobService {
             job.setBotId(botId);
             assignedJobs.add(job);
             count++;
-            if (count >= 5) {
+            if (count >= 50) {
                 break;
             }
         }
