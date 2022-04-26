@@ -65,7 +65,7 @@ public class JobService {
             for (Job unassignedJob : unassignedJobs) {
                 unassignedJob.setBotId(botId);
                 count++;
-                if (count >= 10) {
+                if (count >= 1) {
                     break;
                 }
             }
