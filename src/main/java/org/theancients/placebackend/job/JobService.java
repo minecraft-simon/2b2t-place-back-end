@@ -58,20 +58,20 @@ public class JobService {
         }
     }
 
-    private List<Job> assignNewJobs(long botId) {
-        synchronized (LOCK) {
-            List<Job> unassignedJobs = jobRepository.findAllByBotId(0);
-            int count = 0;
-            for (Job unassignedJob : unassignedJobs) {
-                unassignedJob.setBotId(botId);
-                count++;
-                if (count >= 1) {
-                    break;
-                }
+    private synchronized List<Job> assignNewJobs(long botId) {
+        List<Job> unassignedJobs = jobRepository.findAllByBotId(0);
+        List<Job> assignedJobs = new ArrayList<>();
+        int count = 0;
+        for (Job job : unassignedJobs) {
+            job.setBotId(botId);
+            assignedJobs.add(job);
+            count++;
+            if (count >= 5) {
+                break;
             }
-            jobRepository.saveAll(unassignedJobs);
-            return unassignedJobs;
         }
+        jobRepository.saveAll(assignedJobs);
+        return assignedJobs;
     }
 
     private List<JobDto> convertToJobDto(List<Job> jobs) {

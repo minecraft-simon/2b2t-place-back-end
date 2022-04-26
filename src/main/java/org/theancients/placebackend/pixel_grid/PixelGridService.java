@@ -47,18 +47,16 @@ public class PixelGridService {
             this.pixelGrid = pixelGrid;
         }
 
-        /*
         List<PixelDto> pixelDtos = new ArrayList<>();
         byte[] pixels = this.pixelGrid.getPixels();
-        for (int i = 0; i < pixels.length; i++) {
+        for (int i = 0; i < 500; i++) {
             byte color = pixels[i];
             int x = i / 128;
             int y = i % 128;
             PixelDto pixelDto = new PixelDto(x, y, color);
             pixelDtos.add(pixelDto);
         }
-        jobService.createJobs(pixelDtos);
-         */
+        //jobService.createJobs(pixelDtos);
     }
 
     @Scheduled(fixedRate = 10000)
