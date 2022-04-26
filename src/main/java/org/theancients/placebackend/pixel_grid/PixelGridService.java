@@ -75,13 +75,17 @@ public class PixelGridService {
         if (pixelDto.getColor() < 0 || pixelDto.getColor() > 15) {
             return HttpStatus.BAD_REQUEST;
         }
-        int pos = pixelDto.getX() * 128 + pixelDto.getY();
-        pixelGrid.getPixels()[pos] = pixelDto.getColor();
+        savePixel(pixelDto);
         recordedPixelService.recordPixel(playerName, pixelDto);
 
-        jobService.createJob(pos, pixelDto);
+        jobService.createJob(pixelDto);
 
         return HttpStatus.OK;
+    }
+
+    private void savePixel(PixelDto pixelDto) {
+        int arrayPos = pixelDto.getX() * 128 + pixelDto.getY();
+        pixelGrid.getPixels()[arrayPos] = pixelDto.getColor();
     }
 
 }

@@ -16,7 +16,8 @@ public class JobService {
 
     private static final Object LOCK = new Object();
 
-    public void createJob(int posId, PixelDto pixelDto) {
+    public void createJob(PixelDto pixelDto) {
+        int posId = pixelDto.getX() * 128 + pixelDto.getY() + 1;
         Job job = jobRepository.findById(posId).orElse(new Job());
         job.setId(posId);
         job.setX(pixelDto.getX());
@@ -26,16 +27,8 @@ public class JobService {
     }
 
     public void createJobs(List<PixelDto> pixelDtos) {
-        List<Job> jobs = new ArrayList<>();
         for (PixelDto pixelDto : pixelDtos) {
-            Job job = new Job();
-            int posId = pixelDto.getX() * 128 + pixelDto.getY();
-            job.setId(posId);
-            job.setX(pixelDto.getX());
-            job.setY(pixelDto.getY());
-            job.setColor(pixelDto.getColor());
-            jobs.add(job);
-            createJob(posId, pixelDto);
+            createJob(pixelDto);
         }
     }
 
@@ -66,7 +59,7 @@ public class JobService {
             job.setBotId(botId);
             assignedJobs.add(job);
             count++;
-            if (count >= 50) {
+            if (count >= 10) {
                 break;
             }
         }
