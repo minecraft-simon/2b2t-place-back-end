@@ -22,19 +22,13 @@ public class BotController {
 
     @PutMapping
     @RolesAllowed("ROLE_BOT")
-    public BotStatusResponseDto botStatusUpdate(@RequestBody BotStatusRequestDto botStatusRequestDto) {
-
-        botService.updateStatus(botStatusRequestDto);
-
-        List<int[]> jobs = new ArrayList<>();
-        jobs.add(new int[]{2273, 17, 97, 0});
-        jobs.add(new int[]{7218, 56, 97, 1});
-        jobs.add(new int[]{4473, 34, 97, 2});
-        jobs.add(new int[]{11415, 89, 97, 3});
-        jobs.add(new int[]{16261, 127, 97, 4});
-        BotStatusResponseDto response = new BotStatusResponseDto();
-        response.setJobs(jobs);
-        return response;
+    public ResponseEntity<BotStatusResponseDto> botStatusUpdate(@RequestBody BotStatusRequestDto botStatusRequestDto) {
+        BotStatusResponseDto response = botService.updateStatus(botStatusRequestDto);
+        if (response == null) {
+            return ResponseEntity.badRequest().body(null);
+        } else {
+            return ResponseEntity.ok(response);
+        }
     }
 
     @PostMapping("message")

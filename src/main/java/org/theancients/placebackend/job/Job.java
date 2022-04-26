@@ -13,6 +13,18 @@ public class Job {
     private int x;
     private int y;
     private byte color;
+    private long botId;
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "id=" + id +
+                ", x=" + x +
+                ", y=" + y +
+                ", color=" + color +
+                ", botId=" + botId +
+                '}';
+    }
 
     public int getId() {
         return id;
@@ -44,6 +56,14 @@ public class Job {
 
     public void setColor(byte color) {
         this.color = color;
+    }
+
+    public long getBotId() {
+        return botId;
+    }
+
+    public void setBotId(long botId) {
+        this.botId = botId;
     }
 
 }

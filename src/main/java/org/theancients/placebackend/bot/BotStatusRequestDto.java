@@ -7,6 +7,14 @@ public class BotStatusRequestDto {
     private String username;
     private int status;
 
+    @Override
+    public String toString() {
+        return "BotStatusRequestDto{" +
+                "username='" + username + '\'' +
+                ", status=" + status +
+                '}';
+    }
+
     public String getUsername() {
         return username;
     }
