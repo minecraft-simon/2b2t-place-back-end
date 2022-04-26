@@ -7,15 +7,25 @@ import javax.persistence.Id;
 public class Bot {
 
     @Id
+    private long id;
     private String username;
     private int status;
 
     @Override
     public String toString() {
         return "Bot{" +
-                "username='" + username + '\'' +
+                "id=" + id +
+                ", username='" + username + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {

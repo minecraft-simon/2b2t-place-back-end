@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.theancients.placebackend.job.JobService;
 import org.theancients.placebackend.recorded_pixel.RecordedPixel;
 import org.theancients.placebackend.recorded_pixel.RecordedPixelService;
 
@@ -20,6 +21,9 @@ public class PixelGridService {
 
     @Autowired
     private RecordedPixelService recordedPixelService;
+
+    @Autowired
+    private JobService jobService;
 
     @Value("${application.pixelGridId:2}")
     private long pixelGridId;
@@ -60,6 +64,8 @@ public class PixelGridService {
         int pos = pixelDto.getX() * 128 + pixelDto.getY();
         pixelGrid.getPixels()[pos] = pixelDto.getColor();
         recordedPixelService.recordPixel(playerName, pixelDto);
+
+        jobService.createJob(pos, pixelDto);
 
         return HttpStatus.OK;
     }

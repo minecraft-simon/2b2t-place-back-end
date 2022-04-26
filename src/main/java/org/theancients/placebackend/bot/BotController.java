@@ -15,17 +15,23 @@ import java.util.List;
 public class BotController {
 
     @Autowired
+    private BotService botService;
+
+    @Autowired
     private AuthenticationService authenticationService;
 
     @PutMapping
     @RolesAllowed("ROLE_BOT")
     public BotStatusResponseDto botStatusUpdate(@RequestBody BotStatusRequestDto botStatusRequestDto) {
+
+        botService.updateStatus(botStatusRequestDto);
+
         List<int[]> jobs = new ArrayList<>();
-        jobs.add(new int[]{2273, 17, 97, 97, 1});
-        jobs.add(new int[]{7218, 56, 97, 50, 1});
-        jobs.add(new int[]{4473, 34, 97, 121, 1});
-        jobs.add(new int[]{11415, 89, 97, 23, 1});
-        jobs.add(new int[]{16261, 127, 97, 5, 1});
+        jobs.add(new int[]{2273, 17, 97, 0});
+        jobs.add(new int[]{7218, 56, 97, 1});
+        jobs.add(new int[]{4473, 34, 97, 2});
+        jobs.add(new int[]{11415, 89, 97, 3});
+        jobs.add(new int[]{16261, 127, 97, 4});
         BotStatusResponseDto response = new BotStatusResponseDto();
         response.setJobs(jobs);
         return response;
