@@ -29,7 +29,9 @@ public class BotService {
         bot = botRepository.save(bot);
 
         BotStatusResponseDto response = new BotStatusResponseDto();
-        List<JobDto> jobsForBot = jobService.getJobsForBot(bot.getId());
+        int posX = request.getPosition()[0];
+        int posY = request.getPosition()[1];
+        List<JobDto> jobsForBot = jobService.getJobsForBot(bot.getId(), posX, posY);
         response.setJobs(jobsForBot);
 
         return response;

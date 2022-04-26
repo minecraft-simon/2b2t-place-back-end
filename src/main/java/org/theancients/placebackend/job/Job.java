@@ -23,7 +23,7 @@ public class Job {
                 ", y=" + y +
                 ", color=" + color +
                 ", botId=" + botId +
-                '}';
+                "}\n";
     }
 
     public int getId() {

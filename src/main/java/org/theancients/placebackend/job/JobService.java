@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.theancients.placebackend.pixel_grid.PixelDto;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,12 +33,12 @@ public class JobService {
         }
     }
 
-    public List<JobDto> getJobsForBot(long botId) {
+    public List<JobDto> getJobsForBot(long botId, int posX, int posY) {
         List<Job> existingJobs = jobRepository.findAllByBotId(botId);
         if (!existingJobs.isEmpty()) {
             return convertToJobDto(existingJobs);
         } else {
-            return convertToJobDto(assignNewJobs(botId));
+            return convertToJobDto(assignNewJobs(botId, posX, posY));
         }
     }
 
@@ -51,7 +52,8 @@ public class JobService {
         }
     }
 
-    private synchronized List<Job> assignNewJobs(long botId) {
+    private synchronized List<Job> assignNewJobs(long botId, int posX, int posY) {
+        /*
         List<Job> unassignedJobs = jobRepository.findAllByBotId(0);
         List<Job> assignedJobs = new ArrayList<>();
         int count = 0;
@@ -63,8 +65,33 @@ public class JobService {
                 break;
             }
         }
-        jobRepository.saveAll(assignedJobs);
-        return assignedJobs;
+
+         */
+        findClosestJobs(posX, posY);
+        //jobRepository.saveAll(assignedJobs);
+        return new ArrayList<>();
+    }
+
+    private void findClosestJobs(int posX, int posY) {
+        List<JobWithDistance> jobsWithDistance = new ArrayList<>();
+        List<Job> unassignedJobs = jobRepository.findAllByBotId(0);
+        for (Job job : unassignedJobs) {
+            int distance = squareDistance(job, posX, posY);
+            JobWithDistance jobWithDistance = new JobWithDistance(job, distance);
+            jobsWithDistance.add(jobWithDistance);
+        }
+
+        Collections.sort(jobsWithDistance);
+        // loop through list, find a maximum of 10 closest jobs
+        List<Job> jobsToAssign = new ArrayList<>();
+        for (int i = 0; i < jobsWithDistance.size(); i++) {
+            jobsToAssign.add(jobsWithDistance.get(i).getJob());
+            if (i >= 9) {
+                break;
+            }
+        }
+
+
     }
 
     private List<JobDto> convertToJobDto(List<Job> jobs) {
@@ -73,6 +100,10 @@ public class JobService {
             jobDtos.add(new JobDto(job.getId(), job.getX(), job.getY(), job.getColor()));
         }
         return jobDtos;
+    }
+
+    private int squareDistance(Job job, int x, int y) {
+        return (int) (Math.pow(job.getX() - x, 2) + Math.pow(job.getY() - y, 2));
     }
 
 }
