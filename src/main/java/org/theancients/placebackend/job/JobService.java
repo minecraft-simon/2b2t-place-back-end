@@ -6,6 +6,7 @@ import org.theancients.placebackend.pixel_grid.PixelDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JobService {
@@ -28,6 +29,16 @@ public class JobService {
             return convertToJobDto(existingJobs);
         } else {
             return convertToJobDto(assignNewJobs(botId));
+        }
+    }
+
+    public void jobFinished(JobDto jobDto) {
+        Optional<Job> optionalJob = jobRepository.findById(jobDto.getJobId());
+        if (optionalJob.isPresent()) {
+            Job job = optionalJob.get();
+            if (jobDto.getColor() == job.getColor()) {
+                jobRepository.delete(job);
+            }
         }
     }
 

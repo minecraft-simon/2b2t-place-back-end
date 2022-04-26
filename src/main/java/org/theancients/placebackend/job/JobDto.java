@@ -17,6 +17,16 @@ public class JobDto {
         this.color = color;
     }
 
+    @Override
+    public String toString() {
+        return "JobDto{" +
+                "jobId=" + jobId +
+                ", x=" + x +
+                ", y=" + y +
+                ", color=" + color +
+                '}';
+    }
+
     public int getJobId() {
         return jobId;
     }

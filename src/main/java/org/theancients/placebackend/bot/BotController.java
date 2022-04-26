@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.theancients.placebackend.authentication.AuthenticationService;
+import org.theancients.placebackend.job.JobDto;
+import org.theancients.placebackend.job.JobService;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ public class BotController {
 
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    private JobService jobService;
 
     @PutMapping
     @RolesAllowed("ROLE_BOT")
@@ -41,6 +46,13 @@ public class BotController {
         }
         authenticationService.tryToAuthenticate(dto.getPlayer(), dto.getMessage());
         return ResponseEntity.ok("{}");
+    }
+
+    @PutMapping("finished-job")
+    @RolesAllowed("ROLE_BOT")
+    public String finishedJob(@RequestBody JobDto jobDto) {
+        jobService.jobFinished(jobDto);
+        return "{}";
     }
 
 }
