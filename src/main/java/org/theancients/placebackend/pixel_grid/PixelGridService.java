@@ -47,6 +47,7 @@ public class PixelGridService {
             this.pixelGrid = pixelGrid;
         }
 
+        /*
         List<PixelDto> pixelDtos = new ArrayList<>();
         byte[] pixels = this.pixelGrid.getPixels();
         for (int i = 0; i < pixels.length; i++) {
@@ -57,6 +58,7 @@ public class PixelGridService {
             pixelDtos.add(pixelDto);
         }
         jobService.createJobs(pixelDtos);
+         */
     }
 
     @Scheduled(fixedRate = 10000)

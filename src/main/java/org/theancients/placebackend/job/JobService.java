@@ -14,6 +14,8 @@ public class JobService {
     @Autowired
     private JobRepository jobRepository;
 
+    private static final Object LOCK = new Object();
+
     public void createJob(int posId, PixelDto pixelDto) {
         Job job = jobRepository.findById(posId).orElse(new Job());
         job.setId(posId);
@@ -56,7 +58,7 @@ public class JobService {
         }
     }
 
-    private List<Job> assignNewJobs(long botId) {
+    private synchronized List<Job> assignNewJobs(long botId) {
         List<Job> unassignedJobs = jobRepository.findAllByBotId(0);
         int count = 0;
         for (Job unassignedJob : unassignedJobs) {
