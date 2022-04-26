@@ -14,13 +14,27 @@ public class JobService {
     @Autowired
     private JobRepository jobRepository;
 
-    public void createJob(int pos, PixelDto pixelDto) {
-        Job job = jobRepository.findById(pos).orElse(new Job());
-        job.setId(pos);
+    public void createJob(int posId, PixelDto pixelDto) {
+        Job job = jobRepository.findById(posId).orElse(new Job());
+        job.setId(posId);
         job.setX(pixelDto.getX());
         job.setY(pixelDto.getY());
         job.setColor(pixelDto.getColor());
         jobRepository.save(job);
+    }
+
+    public void createJobs(List<PixelDto> pixelDtos) {
+        List<Job> jobs = new ArrayList<>();
+        for (PixelDto pixelDto : pixelDtos) {
+            Job job = new Job();
+            int posId = pixelDto.getX() * 128 + pixelDto.getY();
+            job.setId(posId);
+            job.setX(pixelDto.getX());
+            job.setY(pixelDto.getY());
+            job.setColor(pixelDto.getColor());
+            jobs.add(job);
+            createJob(posId, pixelDto);
+        }
     }
 
     public List<JobDto> getJobsForBot(long botId) {
@@ -44,8 +58,13 @@ public class JobService {
 
     private List<Job> assignNewJobs(long botId) {
         List<Job> unassignedJobs = jobRepository.findAllByBotId(0);
+        int count = 0;
         for (Job unassignedJob : unassignedJobs) {
             unassignedJob.setBotId(botId);
+            count++;
+            if (count >= 20) {
+                break;
+            }
         }
         jobRepository.saveAll(unassignedJobs);
         return unassignedJobs;

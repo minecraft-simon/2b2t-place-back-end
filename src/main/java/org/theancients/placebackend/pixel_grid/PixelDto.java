@@ -6,6 +6,15 @@ public class PixelDto {
     private int y;
     private byte color;
 
+    public PixelDto() {
+    }
+
+    public PixelDto(int x, int y, byte color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
+
     @Override
     public String toString() {
         return "PixelDto{" +
