@@ -56,7 +56,7 @@ public class PixelGridService {
             PixelDto pixelDto = new PixelDto(x, y, color);
             pixelDtos.add(pixelDto);
         }
-        jobService.createJobs(pixelDtos);
+        //jobService.createJobs(pixelDtos);
     }
 
     @Scheduled(fixedRate = 10000)
