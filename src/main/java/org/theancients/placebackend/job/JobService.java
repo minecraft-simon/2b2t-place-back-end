@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class JobService {
@@ -53,45 +54,21 @@ public class JobService {
     }
 
     private synchronized List<Job> assignNewJobs(long botId, int posX, int posY) {
-        /*
-        List<Job> unassignedJobs = jobRepository.findAllByBotId(0);
-        List<Job> assignedJobs = new ArrayList<>();
-        int count = 0;
-        for (Job job : unassignedJobs) {
+        List<Job> jobs = findClosestJobs(posX, posY);
+        for (Job job : jobs) {
             job.setBotId(botId);
-            assignedJobs.add(job);
-            count++;
-            if (count >= 10) {
-                break;
-            }
         }
-
-         */
-        findClosestJobs(posX, posY);
-        //jobRepository.saveAll(assignedJobs);
-        return new ArrayList<>();
+        jobRepository.saveAll(jobs);
+        return jobs;
     }
 
-    private void findClosestJobs(int posX, int posY) {
-        List<JobWithDistance> jobsWithDistance = new ArrayList<>();
+    private List<Job> findClosestJobs(int posX, int posY) {
         List<Job> unassignedJobs = jobRepository.findAllByBotId(0);
-        for (Job job : unassignedJobs) {
-            int distance = squareDistance(job, posX, posY);
-            JobWithDistance jobWithDistance = new JobWithDistance(job, distance);
-            jobsWithDistance.add(jobWithDistance);
-        }
+        List<Job> sortedJobs = sortJobsByDistance(unassignedJobs, posX, posY);
+        sortedJobs = sortedJobs.stream().limit(10).collect(Collectors.toList()); //find x closest jobs
+        sortedJobs = sortByOptimalWalkingPath(sortedJobs);// get the shortest route through the jobs
 
-        Collections.sort(jobsWithDistance);
-        // loop through list, find a maximum of 10 closest jobs
-        List<Job> jobsToAssign = new ArrayList<>();
-        for (int i = 0; i < jobsWithDistance.size(); i++) {
-            jobsToAssign.add(jobsWithDistance.get(i).getJob());
-            if (i >= 9) {
-                break;
-            }
-        }
-
-
+        return sortedJobs;
     }
 
     private List<JobDto> convertToJobDto(List<Job> jobs) {
@@ -102,8 +79,53 @@ public class JobService {
         return jobDtos;
     }
 
+    private Job findClosestJob(List<Job> jobs, int posX, int posY) {
+        List<Job> sorted = sortJobsByDistance(jobs, posX, posY);
+        if (sorted.isEmpty()) {
+            return null;
+        } else {
+            return sorted.get(0);
+        }
+    }
+
+    private List<Job> sortJobsByDistance(List<Job> jobs, int posX, int posY) {
+        if (jobs.size() <= 1) {
+            return jobs;
+        }
+        List<JobWithDistance> jobsWithDistance = new ArrayList<>();
+        for (Job job : jobs) {
+            int distance = squareDistance(job, posX, posY);
+            JobWithDistance jobWithDistance = new JobWithDistance(job, distance);
+            jobsWithDistance.add(jobWithDistance);
+        }
+
+        Collections.sort(jobsWithDistance);
+
+        List<Job> sortedJobs = new ArrayList<>();
+        for (JobWithDistance jobWithDistance : jobsWithDistance) {
+            sortedJobs.add(jobWithDistance.getJob());
+        }
+        return sortedJobs;
+    }
+
     private int squareDistance(Job job, int x, int y) {
         return (int) (Math.pow(job.getX() - x, 2) + Math.pow(job.getY() - y, 2));
+    }
+
+    private List<Job> sortByOptimalWalkingPath(List<Job> jobs) {
+        if (jobs.size() <= 1) {
+            return jobs;
+        }
+
+        List<Job> sortedJobs = new ArrayList<>();
+        sortedJobs.add(jobs.remove(0));
+        do {
+            Job lastJob = sortedJobs.get(sortedJobs.size() - 1);
+            Job closestJob = findClosestJob(jobs, lastJob.getX(), lastJob.getY());
+            jobs.remove(closestJob);
+            sortedJobs.add(closestJob);
+        } while (!jobs.isEmpty());
+        return sortedJobs;
     }
 
 }
