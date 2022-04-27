@@ -49,7 +49,7 @@ public class PixelGridService {
 
         List<PixelDto> pixelDtos = new ArrayList<>();
         byte[] pixels = this.pixelGrid.getPixels();
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < pixels.length; i++) {
             byte color = pixels[i];
             int x = i / 128;
             int y = i % 128;
