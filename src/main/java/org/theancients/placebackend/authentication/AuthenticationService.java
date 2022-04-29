@@ -56,7 +56,7 @@ public class AuthenticationService {
         }
     }
 
-    private String generateAuthCode() {
+    private synchronized String generateAuthCode() {
         long existingCount = pendingAuthenticationRepository.count();
         int length = Math.max((int) Math.ceil(Math.log10(existingCount)), 3);
         String allowedChars = "CFGHKMNPTWXY"; // no chars that look similar to numbers or to each other
