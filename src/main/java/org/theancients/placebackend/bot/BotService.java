@@ -38,7 +38,7 @@ public class BotService {
             Instant now = Instant.now();
             for (ActiveBot activeBot : activeBots) {
                 long lastPing = Duration.between(activeBot.getLastPing(), now).getSeconds();
-                if (lastPing >= 3 && activeBot.getStatus() > 0) {
+                if (lastPing >= 3) {
                     activeBot.setStatus(0);
                     inactiveBots.add(activeBot);
                 }

@@ -40,7 +40,7 @@ public class AuthenticationService {
         pendingAuthenticationRepository.deleteAll(toDelete);
     }
 
-    public AuthCodeDto generateAuthCode(String sessionId) {
+    public AuthCodeDto generateAuthCode(String sessionId, String authServer) {
         if (sessionId != null && anonymousSessionRepository.existsById(sessionId)) {
             // create pending authentication
             String authCode = generateAuthCode();
