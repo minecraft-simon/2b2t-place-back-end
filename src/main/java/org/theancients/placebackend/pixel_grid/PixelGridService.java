@@ -75,7 +75,9 @@ public class PixelGridService {
         if (pixelDto.getColor() < 0 || pixelDto.getColor() > 15) {
             return HttpStatus.BAD_REQUEST;
         }
+
         savePixel(pixelDto);
+
         recordedPixelService.recordPixel(playerName, pixelDto);
 
         jobService.createJob(pixelDto);
