@@ -8,13 +8,15 @@ public class BotStatusRequestDto {
 
     private String username;
     private int status;
-    private int[] position;
+    private int[] inventory;
+    private double[] position;
 
     @Override
     public String toString() {
         return "BotStatusRequestDto{" +
                 "username='" + username + '\'' +
                 ", status=" + status +
+                ", inventory=" + Arrays.toString(inventory) +
                 ", position=" + Arrays.toString(position) +
                 '}';
     }
@@ -35,11 +37,20 @@ public class BotStatusRequestDto {
         this.status = status;
     }
 
-    public int[] getPosition() {
+    public int[] getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(int[] inventory) {
+        this.inventory = inventory;
+    }
+
+    public double[] getPosition() {
         return position;
     }
 
-    public void setPosition(int[] position) {
+    public void setPosition(double[] position) {
         this.position = position;
     }
+
 }
