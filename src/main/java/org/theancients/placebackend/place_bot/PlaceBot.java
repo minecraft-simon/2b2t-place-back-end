@@ -16,6 +16,7 @@ public class PlaceBot {
     private int status;
     private String inventory;
     private String position;
+    private boolean chatBotEnabled;
     private Instant lastPing;
 
     public PlaceBot() {
@@ -34,6 +35,7 @@ public class PlaceBot {
                 ", status=" + status +
                 ", inventory='" + inventory + '\'' +
                 ", position='" + position + '\'' +
+                ", chatBotEnabled=" + chatBotEnabled +
                 ", lastPing=" + lastPing +
                 '}';
     }
@@ -76,6 +78,14 @@ public class PlaceBot {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public boolean isChatBotEnabled() {
+        return chatBotEnabled;
+    }
+
+    public void setChatBotEnabled(boolean chatBotEnabled) {
+        this.chatBotEnabled = chatBotEnabled;
     }
 
     public Instant getLastPing() {

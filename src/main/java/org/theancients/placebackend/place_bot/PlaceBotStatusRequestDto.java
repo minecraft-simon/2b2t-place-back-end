@@ -8,14 +8,16 @@ public class PlaceBotStatusRequestDto {
     private int status;
     private int[] inventory;
     private double[] position;
+    private boolean chatBotEnabled;
 
     @Override
     public String toString() {
-        return "BotStatusRequestDto{" +
+        return "PlaceBotStatusRequestDto{" +
                 "username='" + username + '\'' +
                 ", status=" + status +
                 ", inventory=" + Arrays.toString(inventory) +
                 ", position=" + Arrays.toString(position) +
+                ", chatBotEnabled=" + chatBotEnabled +
                 '}';
     }
 
@@ -49,6 +51,14 @@ public class PlaceBotStatusRequestDto {
 
     public void setPosition(double[] position) {
         this.position = position;
+    }
+
+    public boolean isChatBotEnabled() {
+        return chatBotEnabled;
+    }
+
+    public void setChatBotEnabled(boolean chatBotEnabled) {
+        this.chatBotEnabled = chatBotEnabled;
     }
 
 }

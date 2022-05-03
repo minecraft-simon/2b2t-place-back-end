@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.theancients.placebackend.authentication.AuthenticationService;
 import org.theancients.placebackend.place_bot.PlaceBotService;
 import org.theancients.placebackend.job.JobService;
+import org.theancients.placebackend.place_bot.PlaceBotStatusRequestDto;
+import org.theancients.placebackend.place_bot.PlaceBotStatusResponseDto;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -15,13 +17,17 @@ import javax.annotation.security.RolesAllowed;
 public class ChatBotController {
 
     @Autowired
-    private PlaceBotService placeBotService;
+    private ChatBotService chatBotService;
 
     @Autowired
     private AuthenticationService authenticationService;
 
-    @Autowired
-    private JobService jobService;
+    @PutMapping
+    @RolesAllowed("ROLE_BOT")
+    public String chatBotStatusUpdate(@RequestBody ChatBotStatusRequestDto request) {
+        chatBotService.updateStatus(request);
+        return "{}";
+    }
 
     @PostMapping("message")
     @RolesAllowed("ROLE_BOT")
