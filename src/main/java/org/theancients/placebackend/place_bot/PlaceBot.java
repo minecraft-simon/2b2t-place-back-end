@@ -1,39 +1,39 @@
-package org.theancients.placebackend.bot.temporary;
+package org.theancients.placebackend.place_bot;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Objects;
 
-public class ActiveBot {
+@Entity
+public class PlaceBot {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String username;
     private int status;
-    private int[] inventory;
-    private double[] position;
+    private String inventory;
+    private String position;
     private Instant lastPing;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ActiveBot activeBot = (ActiveBot) o;
-        return id == activeBot.id && Objects.equals(username, activeBot.username);
+    public PlaceBot() {
+
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username);
+    public PlaceBot(String username) {
+        this.username = username;
     }
 
     @Override
     public String toString() {
-        return "ActiveBot{" +
+        return "PlaceBot{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", status=" + status +
-                ", inventory=" + Arrays.toString(inventory) +
-                ", position=" + Arrays.toString(position) +
+                ", inventory='" + inventory + '\'' +
+                ", position='" + position + '\'' +
                 ", lastPing=" + lastPing +
                 '}';
     }
@@ -62,19 +62,19 @@ public class ActiveBot {
         this.status = status;
     }
 
-    public int[] getInventory() {
+    public String getInventory() {
         return inventory;
     }
 
-    public void setInventory(int[] inventory) {
+    public void setInventory(String inventory) {
         this.inventory = inventory;
     }
 
-    public double[] getPosition() {
+    public String getPosition() {
         return position;
     }
 
-    public void setPosition(double[] position) {
+    public void setPosition(String position) {
         this.position = position;
     }
 

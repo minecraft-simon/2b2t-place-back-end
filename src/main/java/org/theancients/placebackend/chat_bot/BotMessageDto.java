@@ -1,4 +1,4 @@
-package org.theancients.placebackend.bot;
+package org.theancients.placebackend.chat_bot;
 
 public class BotMessageDto {
 
@@ -38,4 +38,5 @@ public class BotMessageDto {
     public void setMessage(String message) {
         this.message = message;
     }
+
 }

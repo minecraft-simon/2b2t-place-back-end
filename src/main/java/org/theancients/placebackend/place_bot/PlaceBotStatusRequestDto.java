@@ -1,10 +1,8 @@
-package org.theancients.placebackend.bot;
-
-import org.springframework.stereotype.Controller;
+package org.theancients.placebackend.place_bot;
 
 import java.util.Arrays;
 
-public class BotStatusRequestDto {
+public class PlaceBotStatusRequestDto {
 
     private String username;
     private int status;

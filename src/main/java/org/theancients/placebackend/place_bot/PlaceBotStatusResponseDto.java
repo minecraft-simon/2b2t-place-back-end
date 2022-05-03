@@ -1,12 +1,10 @@
-package org.theancients.placebackend.bot;
+package org.theancients.placebackend.place_bot;
 
 import org.theancients.placebackend.job.JobDto;
-import org.theancients.placebackend.pixel_grid.PixelDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class BotStatusResponseDto {
+public class PlaceBotStatusResponseDto {
 
     private List<JobDto> jobs;
 
