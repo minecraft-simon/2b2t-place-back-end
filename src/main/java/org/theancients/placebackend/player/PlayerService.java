@@ -38,6 +38,9 @@ public class PlayerService {
     }
 
     public Instant getCooldownEnd(String username) {
+        if (username == null) {
+            return Instant.ofEpochSecond(0L);
+        }
         Instant cooldownEnd = playerCooldown.get(username);
         if (cooldownEnd == null || !cooldownActive() || cooldownEnd.isBefore(Instant.now())) {
             return Instant.ofEpochSecond(0L);
