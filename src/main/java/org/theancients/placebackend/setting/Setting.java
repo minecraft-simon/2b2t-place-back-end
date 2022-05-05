@@ -10,6 +10,14 @@ public class Setting {
     private String id;
     private String value;
 
+    @Override
+    public String toString() {
+        return "Setting{" +
+                "id='" + id + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
+
     public Setting() {
     }
 

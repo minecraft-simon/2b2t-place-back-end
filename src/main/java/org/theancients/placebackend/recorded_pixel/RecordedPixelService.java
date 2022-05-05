@@ -16,7 +16,7 @@ public class RecordedPixelService {
 
     public void recordPixel(String playerName, PixelDto pixelDto) {
         RecordedPixel recordedPixel = new RecordedPixel();
-        recordedPixel.setPlayerId(playerService.lookUpPlayer(playerName));
+        recordedPixel.setPlayerId(playerService.getPlayerId(playerName));
         recordedPixel.setX(pixelDto.getX());
         recordedPixel.setY(pixelDto.getY());
         recordedPixel.setColor(pixelDto.getColor());

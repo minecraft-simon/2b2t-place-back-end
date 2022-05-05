@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/status")
 public class StatusController {
@@ -15,8 +17,9 @@ public class StatusController {
     private StatusService statusService;
 
     @PutMapping
-    public ResponseEntity<StatusResponseDto> statusUpdate(@RequestBody StatusRequestDto statusRequestDto) {
-        StatusResponseDto statusResponseDto = statusService.statusUpdate(statusRequestDto);
+    public ResponseEntity<StatusResponseDto> statusUpdate(Principal principal, @RequestBody StatusRequestDto statusRequestDto) {
+        String username = principal == null ? null : principal.getName();
+        StatusResponseDto statusResponseDto = statusService.statusUpdate(username, statusRequestDto);
         if (statusResponseDto != null) {
             return ResponseEntity.ok(statusResponseDto);
         } else {

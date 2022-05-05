@@ -3,14 +3,15 @@ package org.theancients.placebackend.pixel_grid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.theancients.placebackend.job.JobDto;
 import org.theancients.placebackend.job.JobService;
-import org.theancients.placebackend.recorded_pixel.RecordedPixel;
+import org.theancients.placebackend.player.PlayerService;
 import org.theancients.placebackend.recorded_pixel.RecordedPixelService;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +22,9 @@ public class PixelGridService {
 
     @Autowired
     private PixelGridRepository pixelGridRepository;
+
+    @Autowired
+    private PlayerService playerService;
 
     @Autowired
     private RecordedPixelService recordedPixelService;
@@ -68,13 +72,22 @@ public class PixelGridService {
         return pixelGrid;
     }
 
-    public HttpStatus updatePixel(String playerName, PixelDto pixelDto) {
+    public ResponseEntity<PixelUpdateResponseDto> updatePixel(String playerName, PixelDto pixelDto) {
         if (pixelDto == null || pixelDto.getX() < 0 || pixelDto.getX() > 127 || pixelDto.getY() < 0 || pixelDto.getY() > 127) {
-            return HttpStatus.BAD_REQUEST;
+            return ResponseEntity.badRequest().body(null);
         }
         if (pixelDto.getColor() < 0 || pixelDto.getColor() > 15) {
-            return HttpStatus.BAD_REQUEST;
+            return ResponseEntity.badRequest().body(null);
         }
+
+        // check if cooldown is active
+        if (playerService.playerHasCooldown(playerName)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
+        }
+
+        // set cooldown
+        int cooldownSeconds = playerService.getCooldownSeconds();
+        Instant cooldownEnd = playerService.startCooldown(playerName);
 
         savePixel(pixelDto);
 
@@ -82,7 +95,9 @@ public class PixelGridService {
 
         jobService.createJob(pixelDto);
 
-        return HttpStatus.OK;
+        PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, cooldownSeconds, cooldownEnd);
+
+        return ResponseEntity.ok(pixelUpdateResponseDto);
     }
 
     private void savePixel(PixelDto pixelDto) {

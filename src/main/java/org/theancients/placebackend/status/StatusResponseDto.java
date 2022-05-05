@@ -3,6 +3,7 @@ package org.theancients.placebackend.status;
 import org.theancients.placebackend.pixel_grid.PixelGrid;
 
 import java.awt.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,9 @@ public class StatusResponseDto {
     private PixelGrid pixelGrid;
     private String identity;
     private String authToken;
-    private int pollingDelay = 1000;
+    private int pollingDelay;
+    private int cooldownSeconds;
+    private Instant cooldownEnd;
     private boolean maintenanceMode;
     private boolean sessionExpired;
 
@@ -54,6 +57,22 @@ public class StatusResponseDto {
 
     public void setPollingDelay(int pollingDelay) {
         this.pollingDelay = pollingDelay;
+    }
+
+    public int getCooldownSeconds() {
+        return cooldownSeconds;
+    }
+
+    public void setCooldownSeconds(int cooldownSeconds) {
+        this.cooldownSeconds = cooldownSeconds;
+    }
+
+    public Instant getCooldownEnd() {
+        return cooldownEnd;
+    }
+
+    public void setCooldownEnd(Instant cooldownEnd) {
+        this.cooldownEnd = cooldownEnd;
     }
 
     public boolean isMaintenanceMode() {
