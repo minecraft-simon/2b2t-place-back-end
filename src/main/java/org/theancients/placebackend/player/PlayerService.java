@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.setting.SettingService;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,10 +28,11 @@ public class PlayerService {
         return playerRepository.save(player).getId();
     }
 
-    public Instant startCooldown(String user) {
-        Instant cooldownEnd = Instant.now().plusSeconds(getCooldownSeconds());
+    public int startCooldown(String user) {
+        int cooldownSeconds = getCooldownSeconds();
+        Instant cooldownEnd = Instant.now().plusSeconds(cooldownSeconds);
         playerCooldown.put(user, cooldownEnd);
-        return cooldownEnd;
+        return cooldownSeconds;
     }
 
     public int getCooldownSeconds() {
@@ -46,6 +48,12 @@ public class PlayerService {
             return Instant.ofEpochSecond(0L);
         }
         return cooldownEnd;
+    }
+
+    public int getCooldownSecondsLeft(String username) {
+        Instant cooldownEnd = getCooldownEnd(username);
+        long secondsLeft = Duration.between(Instant.now(), cooldownEnd).getSeconds();
+        return (int) Math.max(secondsLeft, 0);
     }
 
     public boolean playerHasCooldown(String username) {

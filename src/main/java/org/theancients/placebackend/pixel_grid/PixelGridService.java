@@ -86,8 +86,7 @@ public class PixelGridService {
         }
 
         // set cooldown
-        int cooldownSeconds = playerService.getCooldownSeconds();
-        Instant cooldownEnd = playerService.startCooldown(playerName);
+        int cooldownSeconds = playerService.startCooldown(playerName);
 
         savePixel(pixelDto);
 
@@ -95,7 +94,7 @@ public class PixelGridService {
 
         jobService.createJob(pixelDto);
 
-        PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, cooldownSeconds, cooldownEnd);
+        PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, cooldownSeconds);
 
         return ResponseEntity.ok(pixelUpdateResponseDto);
     }

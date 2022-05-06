@@ -8,14 +8,12 @@ public class PixelUpdateResponseDto {
     private int y;
     private byte color;
     private int cooldownSeconds;
-    private Instant cooldownEnd;
 
-    public PixelUpdateResponseDto(PixelDto pixelDto, int cooldownSeconds, Instant cooldownEnd) {
+    public PixelUpdateResponseDto(PixelDto pixelDto, int cooldownSeconds) {
         x = pixelDto.getX();
         y = pixelDto.getY();
         color = pixelDto.getColor();
         this.cooldownSeconds = cooldownSeconds;
-        this.cooldownEnd = cooldownEnd;
     }
 
     @Override
@@ -25,7 +23,6 @@ public class PixelUpdateResponseDto {
                 ", y=" + y +
                 ", color=" + color +
                 ", cooldownSeconds=" + cooldownSeconds +
-                ", cooldownEnds=" + cooldownEnd +
                 '}';
     }
 
@@ -59,14 +56,6 @@ public class PixelUpdateResponseDto {
 
     public void setCooldownSeconds(int cooldownSeconds) {
         this.cooldownSeconds = cooldownSeconds;
-    }
-
-    public Instant getCooldownEnd() {
-        return cooldownEnd;
-    }
-
-    public void setCooldownEnd(Instant cooldownEnd) {
-        this.cooldownEnd = cooldownEnd;
     }
 
 }

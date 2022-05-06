@@ -15,7 +15,7 @@ public class StatusResponseDto {
     private String authToken;
     private int pollingDelay;
     private int cooldownSeconds;
-    private Instant cooldownEnd;
+    private int cooldownSecondsLeft;
     private boolean maintenanceMode;
     private boolean sessionExpired;
 
@@ -67,12 +67,12 @@ public class StatusResponseDto {
         this.cooldownSeconds = cooldownSeconds;
     }
 
-    public Instant getCooldownEnd() {
-        return cooldownEnd;
+    public int getCooldownSecondsLeft() {
+        return cooldownSecondsLeft;
     }
 
-    public void setCooldownEnd(Instant cooldownEnd) {
-        this.cooldownEnd = cooldownEnd;
+    public void setCooldownSecondsLeft(int cooldownSecondsLeft) {
+        this.cooldownSecondsLeft = cooldownSecondsLeft;
     }
 
     public boolean isMaintenanceMode() {
