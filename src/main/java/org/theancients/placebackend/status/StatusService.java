@@ -59,7 +59,9 @@ public class StatusService {
             return statusResponseDto;
         }
 
-        return null;
+        StatusResponseDto statusResponseDto = new StatusResponseDto();
+        statusResponseDto.setSessionExpired(true);
+        return statusResponseDto;
     }
 
 }

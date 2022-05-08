@@ -36,6 +36,12 @@ public class AnonymousSessionService {
         }
         Instant now = Instant.now();
         AnonymousSession anonymousSession = anonymousSessionRepository.findBySessionId(sessionId).orElse(new AnonymousSession(now));
+
+        long sessionAge = Duration.between(anonymousSession.getCreated(), now).getSeconds() / 60 / 60;
+        if (sessionAge > 12) { // invalidate session if older than 12 hours
+            return false;
+        }
+
         anonymousSession.setSessionId(sessionId);
         anonymousSession.setLastPing(now);
         anonymousSessionRepository.save(anonymousSession);
