@@ -65,9 +65,11 @@ public class PixelGridService {
         //jobService.createJobs(pixelDtos);
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 1000)
     private void savePixelGrid() {
-        pixelGridRepository.save(pixelGrid);
+        synchronized (LOCK) {
+            pixelGridRepository.save(pixelGrid);
+        }
     }
 
     public PixelGrid getPixelGrid() {
