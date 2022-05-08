@@ -37,6 +37,8 @@ public class PixelGridService {
 
     private PixelGrid pixelGrid;
 
+    private static final Object LOCK = new Object();
+
     @PostConstruct
     private void init() {
         Optional<PixelGrid> optionalPixelGrid = pixelGridRepository.findById(pixelGridId);
@@ -85,23 +87,26 @@ public class PixelGridService {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }
 
+        int arrayPos = pixelDto.getX() * 128 + pixelDto.getY();
+        byte existingColor = pixelGrid.getPixels()[arrayPos];
+        if (existingColor == pixelDto.getColor()) {
+            PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, 0);
+            return ResponseEntity.ok(pixelUpdateResponseDto);
+        }
+
         // set cooldown
         int cooldownSeconds = playerService.startCooldown(playerName);
 
-        savePixel(pixelDto);
-
-        recordedPixelService.recordPixel(playerName, pixelDto);
-
-        jobService.createJob(pixelDto);
+        // save pixel
+        synchronized (LOCK) {
+            pixelGrid.getPixels()[arrayPos] = pixelDto.getColor();
+            recordedPixelService.recordPixel(playerName, pixelDto);
+            jobService.createJob(pixelDto);
+        }
 
         PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, cooldownSeconds);
 
         return ResponseEntity.ok(pixelUpdateResponseDto);
-    }
-
-    private void savePixel(PixelDto pixelDto) {
-        int arrayPos = pixelDto.getX() * 128 + pixelDto.getY();
-        pixelGrid.getPixels()[arrayPos] = pixelDto.getColor();
     }
 
 }
