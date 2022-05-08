@@ -10,6 +10,7 @@ import org.theancients.placebackend.job.JobService;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PlaceBotService {
@@ -76,6 +77,16 @@ public class PlaceBotService {
         return response;
     }
 
+    public Map<String, PlaceBotPosition> getBotPositions() {
+        Map<String, PlaceBotPosition> botPositions = new ConcurrentHashMap<>();
+        synchronized (LOCK) {
+            for (ActivePlaceBot activePlaceBot : activePlaceBots) {
+                botPositions.put(activePlaceBot.getUsername(), activePlaceBot.getPlaceBotPosition());
+            }
+        }
+        return botPositions;
+    }
+
     private long updateBotDatabase(PlaceBotStatusRequestDto request) {
         String username = request.getUsername();
         PlaceBot placeBot = placeBotRepository.findByUsername(username).orElse(new PlaceBot(username));
@@ -92,7 +103,7 @@ public class PlaceBotService {
         activePlaceBot.setUsername(request.getUsername());
         activePlaceBot.setStatus(request.getStatus());
         activePlaceBot.setInventory(request.getInventory());
-        activePlaceBot.setPosition(request.getPosition());
+        activePlaceBot.setPlaceBotPosition(new PlaceBotPosition(request.getPosition()));
         activePlaceBot.setLastPing(Instant.now());
         synchronized (LOCK) {
             activePlaceBots.remove(activePlaceBot);

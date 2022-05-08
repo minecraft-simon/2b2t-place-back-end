@@ -1,5 +1,7 @@
 package org.theancients.placebackend.place_bot.temporary;
 
+import org.theancients.placebackend.place_bot.PlaceBotPosition;
+
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
@@ -10,7 +12,7 @@ public class ActivePlaceBot {
     private String username;
     private int status;
     private int[] inventory;
-    private double[] position;
+    private PlaceBotPosition placeBotPosition;
     private Instant lastPing;
 
     @Override
@@ -28,12 +30,12 @@ public class ActivePlaceBot {
 
     @Override
     public String toString() {
-        return "ActiveBot{" +
+        return "ActivePlaceBot{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", status=" + status +
                 ", inventory=" + Arrays.toString(inventory) +
-                ", position=" + Arrays.toString(position) +
+                ", placeBotPosition=" + placeBotPosition +
                 ", lastPing=" + lastPing +
                 '}';
     }
@@ -70,12 +72,12 @@ public class ActivePlaceBot {
         this.inventory = inventory;
     }
 
-    public double[] getPosition() {
-        return position;
+    public PlaceBotPosition getPlaceBotPosition() {
+        return placeBotPosition;
     }
 
-    public void setPosition(double[] position) {
-        this.position = position;
+    public void setPlaceBotPosition(PlaceBotPosition placeBotPosition) {
+        this.placeBotPosition = placeBotPosition;
     }
 
     public Instant getLastPing() {

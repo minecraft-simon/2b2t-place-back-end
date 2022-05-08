@@ -7,6 +7,7 @@ import org.theancients.placebackend.authentication.AuthenticationService;
 import org.theancients.placebackend.authentication.PendingAuthentication;
 import org.theancients.placebackend.highlight.HighlightService;
 import org.theancients.placebackend.pixel_grid.PixelGridService;
+import org.theancients.placebackend.place_bot.PlaceBotService;
 import org.theancients.placebackend.player.PlayerService;
 import org.theancients.placebackend.setting.SettingService;
 
@@ -32,6 +33,9 @@ public class StatusService {
     private PlayerService playerService;
 
     @Autowired
+    private PlaceBotService placeBotService;
+
+    @Autowired
     private SettingService settingService;
 
     public StatusResponseDto statusUpdate(String username, StatusRequestDto statusRequestDto) {
@@ -46,9 +50,10 @@ public class StatusService {
                 statusResponseDto.setAuthToken(pendingAuthentication.getAuthToken());
             }
 
+            statusResponseDto.setPixelGrid(pixelGridService.getPixelGrid());
             List<Point> highlights = highlightService.updateHighlight(sessionId, statusRequestDto.getHighlightPos());
             statusResponseDto.setHighlights(highlights);
-            statusResponseDto.setPixelGrid(pixelGridService.getPixelGrid());
+            statusResponseDto.setBotPositions(placeBotService.getBotPositions());
 
             statusResponseDto.setPollingDelay(settingService.getInt("frontend_polling_delay", 1000));
             statusResponseDto.setCooldownSeconds(playerService.getCooldownSeconds());
