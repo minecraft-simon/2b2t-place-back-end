@@ -65,7 +65,8 @@ public class AuthHeaderFilter extends OncePerRequestFilter {
                     Authentication authentication = new UsernamePasswordAuthenticationToken(identity, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } catch (JwtException ignored) {
-
+                    response.setStatus(401);
+                    return;
                 }
             }
         }
