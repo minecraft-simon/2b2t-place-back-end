@@ -10,9 +10,21 @@ public class PlaceBotPosition {
     }
 
     public PlaceBotPosition(double[] position) {
-        this.x = position[0];
-        this.y = position[1];
         this.rotation = position[2];
+        this.x = clamp(position[0]);
+        this.y = clamp(position[1]);
+    }
+
+    private double clamp(double value) {
+        if (value < 0) {
+            value = 0;
+            this.rotation = Double.NaN;
+        }
+        if (value > 128) {
+            value = 128;
+            this.rotation = Double.NaN;
+        }
+        return value;
     }
 
     @Override
