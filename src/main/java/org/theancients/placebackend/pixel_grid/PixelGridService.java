@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.theancients.placebackend.job.JobService;
 import org.theancients.placebackend.player.PlayerService;
 import org.theancients.placebackend.recorded_pixel.RecordedPixelService;
+import org.theancients.placebackend.setting.SettingService;
 
 import javax.annotation.PostConstruct;
 import java.time.Instant;
@@ -32,6 +33,9 @@ public class PixelGridService {
     @Autowired
     private JobService jobService;
 
+    @Autowired
+    private SettingService settingService;
+
     @Value("${application.pixelGridId:2}")
     private long pixelGridId;
 
@@ -52,7 +56,21 @@ public class PixelGridService {
             pixelGrid.setPixels(pixels);
             this.pixelGrid = pixelGrid;
         }
+    }
 
+    @Scheduled(fixedRate = 1000)
+    private void savePixelGrid() {
+        boolean createJobsFromPixelGrid = settingService.getBoolean("create_jobs_from_pixel_grid", false);
+        if (createJobsFromPixelGrid) {
+            transformPixelGridToJobs();
+            settingService.setBoolean("create_jobs_from_pixel_grid", false);
+        }
+        synchronized (LOCK) {
+            pixelGridRepository.save(pixelGrid);
+        }
+    }
+
+    private void transformPixelGridToJobs() {
         List<PixelDto> pixelDtos = new ArrayList<>();
         byte[] pixels = this.pixelGrid.getPixels();
         for (int i = 0; i < pixels.length; i++) {
@@ -63,13 +81,6 @@ public class PixelGridService {
             pixelDtos.add(pixelDto);
         }
         jobService.createJobs(pixelDtos);
-    }
-
-    @Scheduled(fixedRate = 1000)
-    private void savePixelGrid() {
-        synchronized (LOCK) {
-            pixelGridRepository.save(pixelGrid);
-        }
     }
 
     public PixelGrid getPixelGrid() {
