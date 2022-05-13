@@ -62,8 +62,8 @@ public class PixelGridService {
     private void savePixelGrid() {
         boolean createJobsFromPixelGrid = settingService.getBoolean("create_jobs_from_pixel_grid", false);
         if (createJobsFromPixelGrid) {
-            transformPixelGridToJobs();
             settingService.setBoolean("create_jobs_from_pixel_grid", false);
+            transformPixelGridToJobs();
         }
         synchronized (LOCK) {
             pixelGridRepository.save(pixelGrid);

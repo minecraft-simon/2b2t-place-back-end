@@ -25,6 +25,7 @@ public class JobService {
         job.setX(pixelDto.getX());
         job.setY(pixelDto.getY());
         job.setColor(pixelDto.getColor());
+        job.setBotId(0);
         jobRepository.save(job);
     }
 
