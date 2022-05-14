@@ -94,6 +94,7 @@ public class PlaceBotService {
         placeBot.setInventory(Arrays.toString(request.getInventory()));
         placeBot.setPosition(Arrays.toString(request.getPosition()));
         placeBot.setLastPing(Instant.now());
+        placeBot.setChatBotEnabled(request.isChatBotEnabled());
         return placeBotRepository.save(placeBot).getId();
     }
 

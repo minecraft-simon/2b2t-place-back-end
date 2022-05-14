@@ -1,9 +1,11 @@
 package org.theancients.placebackend.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.pixel_grid.PixelDto;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,15 +20,22 @@ public class JobService {
 
     private static final Object LOCK = new Object();
 
+    @Scheduled(fixedRate = 1000)
+    private void unassignJobs() {
+
+    }
+
     public void createJob(PixelDto pixelDto) {
-        int posId = pixelDto.getX() * 128 + pixelDto.getY() + 1;
-        Job job = jobRepository.findById(posId).orElse(new Job());
-        job.setId(posId);
-        job.setX(pixelDto.getX());
-        job.setY(pixelDto.getY());
-        job.setColor(pixelDto.getColor());
-        job.setBotId(0);
-        jobRepository.save(job);
+        synchronized (LOCK) {
+            int posId = pixelDto.getX() * 128 + pixelDto.getY() + 1;
+            Job job = jobRepository.findById(posId).orElse(new Job());
+            job.setId(posId);
+            job.setX(pixelDto.getX());
+            job.setY(pixelDto.getY());
+            job.setColor(pixelDto.getColor());
+            job.setBotId(0);
+            jobRepository.save(job);
+        }
     }
 
     public void createJobs(List<PixelDto> pixelDtos) {
@@ -36,31 +45,38 @@ public class JobService {
     }
 
     public List<JobDto> getJobsForBot(long botId, int posX, int posY) {
-        List<Job> existingJobs = jobRepository.findAllByBotId(botId);
-        if (!existingJobs.isEmpty()) {
-            return convertToJobDto(existingJobs);
-        } else {
-            return convertToJobDto(assignNewJobs(botId, posX, posY));
+        synchronized (LOCK) {
+            List<Job> existingJobs = jobRepository.findAllByBotId(botId);
+            if (!existingJobs.isEmpty()) {
+                return convertToJobDto(existingJobs);
+            } else {
+                return convertToJobDto(assignNewJobs(botId, posX, posY));
+            }
         }
     }
 
     public void jobFinished(JobDto jobDto) {
-        Optional<Job> optionalJob = jobRepository.findById(jobDto.getJobId());
-        if (optionalJob.isPresent()) {
-            Job job = optionalJob.get();
-            if (jobDto.getColor() == job.getColor()) {
-                jobRepository.delete(job);
+        synchronized (LOCK) {
+            Optional<Job> optionalJob = jobRepository.findById(jobDto.getJobId());
+            if (optionalJob.isPresent()) {
+                Job job = optionalJob.get();
+                if (jobDto.getColor() == job.getColor()) {
+                    jobRepository.delete(job);
+                }
             }
         }
     }
 
     private synchronized List<Job> assignNewJobs(long botId, int posX, int posY) {
-        List<Job> jobs = findClosestJobs(posX, posY);
-        for (Job job : jobs) {
-            job.setBotId(botId);
+        synchronized (LOCK) {
+            List<Job> jobs = findClosestJobs(posX, posY);
+            for (Job job : jobs) {
+                job.setBotId(botId);
+                job.setAssignedAt(Instant.now());
+            }
+            jobRepository.saveAll(jobs);
+            return jobs;
         }
-        jobRepository.saveAll(jobs);
-        return jobs;
     }
 
     private List<Job> findClosestJobs(int posX, int posY) {

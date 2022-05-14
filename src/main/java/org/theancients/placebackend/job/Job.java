@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.Instant;
 
 @Entity
 public class Job {
@@ -14,6 +15,7 @@ public class Job {
     private int y;
     private byte color;
     private long botId;
+    private Instant assignedAt;
 
     @Override
     public String toString() {
@@ -23,7 +25,8 @@ public class Job {
                 ", y=" + y +
                 ", color=" + color +
                 ", botId=" + botId +
-                "}\n";
+                ", assignedAt=" + assignedAt +
+                '}';
     }
 
     public int getId() {
@@ -66,4 +69,11 @@ public class Job {
         this.botId = botId;
     }
 
+    public Instant getAssignedAt() {
+        return assignedAt;
+    }
+
+    public void setAssignedAt(Instant assignedAt) {
+        this.assignedAt = assignedAt;
+    }
 }
