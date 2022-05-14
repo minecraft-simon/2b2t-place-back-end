@@ -16,6 +16,7 @@ public class ChatBot {
     private String server;
     private int status;
     private Instant lastPing;
+    private int priority;
 
     @Override
     public String toString() {
@@ -25,6 +26,7 @@ public class ChatBot {
                 ", server='" + server + '\'' +
                 ", status=" + status +
                 ", lastPing=" + lastPing +
+                ", priority=" + priority +
                 '}';
     }
 
@@ -67,4 +69,13 @@ public class ChatBot {
     public void setLastPing(Instant lastPing) {
         this.lastPing = lastPing;
     }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
 }

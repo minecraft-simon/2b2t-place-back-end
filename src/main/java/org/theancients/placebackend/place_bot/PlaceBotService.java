@@ -3,6 +3,8 @@ package org.theancients.placebackend.place_bot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.theancients.placebackend.chat_bot.ChatBotService;
+import org.theancients.placebackend.chat_bot.ChatBotStatusRequestDto;
 import org.theancients.placebackend.place_bot.temporary.ActivePlaceBot;
 import org.theancients.placebackend.job.JobDto;
 import org.theancients.placebackend.job.JobService;
@@ -20,6 +22,9 @@ public class PlaceBotService {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private ChatBotService chatBotService;
 
     private static final Object LOCK = new Object();
 
@@ -63,6 +68,13 @@ public class PlaceBotService {
     public PlaceBotStatusResponseDto updateStatus(PlaceBotStatusRequestDto request) {
         if (request == null || request.getUsername() == null || request.getUsername().isBlank()) {
             return null;
+        }
+
+        if (request.isChatBotEnabled()) {
+            ChatBotStatusRequestDto requestDto = new ChatBotStatusRequestDto();
+            requestDto.setUsername(request.getUsername());
+            requestDto.setServer("2b2t.org");
+            chatBotService.updateStatus(requestDto);
         }
 
         long botId = updateBotDatabase(request);
