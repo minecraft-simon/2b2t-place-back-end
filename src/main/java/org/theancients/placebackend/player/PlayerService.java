@@ -76,7 +76,7 @@ public class PlayerService {
 
     public boolean isBanned(String playerName) {
         Optional<Player> optionalPlayer = playerRepository.findByName(playerName);
-        return optionalPlayer.map(Player::isBanned).orElse(true);
+        return optionalPlayer.map(Player::isBanned).orElse(false);
     }
 
 
