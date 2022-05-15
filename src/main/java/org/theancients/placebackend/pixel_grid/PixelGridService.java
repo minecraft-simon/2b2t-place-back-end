@@ -99,6 +99,7 @@ public class PixelGridService {
             return ResponseEntity.badRequest().body(null);
         }
 
+        /*
         if (playerService.isBanned(playerName)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }
@@ -109,7 +110,7 @@ public class PixelGridService {
 
         if (settingService.getBoolean("maintenance_mode", false)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
-        }
+        }*/
 
         // check if cooldown is active
         if (playerService.playerHasCooldown(playerName)) {
