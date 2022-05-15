@@ -5,15 +5,13 @@ import org.theancients.placebackend.place_bot.PlaceBotPosition;
 
 import java.awt.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class StatusResponseDto {
 
     private PixelGrid pixelGrid;
-    private List<Point> highlights = new ArrayList<>();
+    private Set<Point> highlights = new HashSet<>();
     private Map<String, PlaceBotPosition> botPositions = new HashMap<>();
     private Map<String, String> chatBots = new HashMap<>();
     private String identity;
@@ -51,11 +49,11 @@ public class StatusResponseDto {
         this.pixelGrid = pixelGrid;
     }
 
-    public List<Point> getHighlights() {
+    public Set<Point> getHighlights() {
         return highlights;
     }
 
-    public void setHighlights(List<Point> highlights) {
+    public void setHighlights(Set<Point> highlights) {
         this.highlights = highlights;
     }
 

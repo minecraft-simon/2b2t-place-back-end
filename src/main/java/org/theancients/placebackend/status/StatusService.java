@@ -14,6 +14,7 @@ import org.theancients.placebackend.setting.SettingService;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class StatusService {
@@ -55,7 +56,7 @@ public class StatusService {
             }
 
             statusResponseDto.setPixelGrid(pixelGridService.getPixelGrid());
-            List<Point> highlights = highlightService.updateHighlight(sessionId, statusRequestDto.getHighlightPos());
+            Set<Point> highlights = highlightService.updateHighlight(sessionId, statusRequestDto.getHighlightPos());
             statusResponseDto.setHighlights(highlights);
             statusResponseDto.setBotPositions(placeBotService.getBotPositions());
             statusResponseDto.setChatBots(chatBotService.getAvailableChatBots());

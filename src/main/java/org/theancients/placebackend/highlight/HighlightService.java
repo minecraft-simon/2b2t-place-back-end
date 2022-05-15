@@ -52,7 +52,7 @@ public class HighlightService {
         highlightRepository.save(highlight);
     }
 
-    public List<Point> updateHighlight(String userId, Point point) {
+    public Set<Point> updateHighlight(String userId, Point point) {
         // only update highlight if a valid point was selected
         if (point != null && point.x >= 0 && point.x < 128 && point.y >= 0 && point.y < 128) {
             Optional<Highlight> optionalHighlight = highlightRepository.findById(userId);
@@ -79,7 +79,7 @@ public class HighlightService {
             }
         }
 
-        return activeHighlights;
+        return new HashSet<>(activeHighlights);
     }
 
 }
