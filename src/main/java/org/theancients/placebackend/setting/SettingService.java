@@ -27,6 +27,8 @@ public class SettingService {
         initSetting("cooldown_seconds", "60");
         initSetting("frontend_polling_delay", "1000");
         initSetting("create_jobs_from_pixel_grid", "false");
+        initSetting("allow_pixel_updates", "false");
+        initSetting("launch_timestamp", "1652652000");
     }
 
     private void initSetting(String name, String value) {
@@ -63,6 +65,11 @@ public class SettingService {
     public int getInt(String name, int defaultVal) {
         String value = cachedSettings.get(name);
         return (value == null) ? defaultVal : Integer.parseInt(value);
+    }
+
+    public long getLong(String name, long defaultVal) {
+        String value = cachedSettings.get(name);
+        return (value == null) ? defaultVal : Long.parseLong(value);
     }
 
 }

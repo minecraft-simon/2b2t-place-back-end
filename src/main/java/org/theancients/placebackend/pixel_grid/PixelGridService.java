@@ -95,6 +95,10 @@ public class PixelGridService {
             return ResponseEntity.badRequest().body(null);
         }
 
+        if (!settingService.getBoolean("allow_pixel_updates", false)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
+        }
+
         // check if cooldown is active
         if (playerService.playerHasCooldown(playerName)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);

@@ -15,6 +15,7 @@ public class StatusResponseDto {
     private PixelGrid pixelGrid;
     private List<Point> highlights = new ArrayList<>();
     private Map<String, PlaceBotPosition> botPositions = new HashMap<>();
+    private Map<String, String> chatBots = new HashMap<>();
     private String identity;
     private String authToken;
     private int pollingDelay;
@@ -22,6 +23,7 @@ public class StatusResponseDto {
     private int cooldownSecondsLeft;
     private boolean maintenanceMode;
     private boolean sessionExpired;
+    private Long launchTimestamp;
 
     @Override
     public String toString() {
@@ -29,6 +31,7 @@ public class StatusResponseDto {
                 "pixelGrid=" + pixelGrid +
                 ", highlights=" + highlights +
                 ", botPositions=" + botPositions +
+                ", chatBots=" + chatBots +
                 ", identity='" + identity + '\'' +
                 ", authToken='" + authToken + '\'' +
                 ", pollingDelay=" + pollingDelay +
@@ -36,6 +39,7 @@ public class StatusResponseDto {
                 ", cooldownSecondsLeft=" + cooldownSecondsLeft +
                 ", maintenanceMode=" + maintenanceMode +
                 ", sessionExpired=" + sessionExpired +
+                ", launchTimestamp=" + launchTimestamp +
                 '}';
     }
 
@@ -61,6 +65,14 @@ public class StatusResponseDto {
 
     public void setBotPositions(Map<String, PlaceBotPosition> botPositions) {
         this.botPositions = botPositions;
+    }
+
+    public Map<String, String> getChatBots() {
+        return chatBots;
+    }
+
+    public void setChatBots(Map<String, String> chatBots) {
+        this.chatBots = chatBots;
     }
 
     public String getIdentity() {
@@ -117,6 +129,14 @@ public class StatusResponseDto {
 
     public void setSessionExpired(boolean sessionExpired) {
         this.sessionExpired = sessionExpired;
+    }
+
+    public Long getLaunchTimestamp() {
+        return launchTimestamp;
+    }
+
+    public void setLaunchTimestamp(Long launchTimestamp) {
+        this.launchTimestamp = launchTimestamp;
     }
 
 }

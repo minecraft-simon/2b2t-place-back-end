@@ -6,13 +6,18 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ChatBotService {
 
     @Autowired
     private ChatBotRepository chatBotRepository;
+
+    private Map<String, String> availableChatBots = new ConcurrentHashMap<>();
 
     @Scheduled(fixedRate = 1000)
     private void refreshBotState() {
@@ -41,4 +46,11 @@ public class ChatBotService {
         chatBotRepository.save(chatBot);
     }
 
+    public Map<String, String> getAvailableChatBots() {
+        Map<String, String> map = new HashMap<>();
+        map.put("2b2t", "OurPlace");
+        map.put("archive", "OurPlace");
+        return map;
+        //return availableChatBots;
+    }
 }
