@@ -22,6 +22,7 @@ public class StatusResponseDto {
     private boolean maintenanceMode;
     private boolean sessionExpired;
     private Long launchTimestamp;
+    private String highlightLastPlayerName;
 
     @Override
     public String toString() {
@@ -38,6 +39,7 @@ public class StatusResponseDto {
                 ", maintenanceMode=" + maintenanceMode +
                 ", sessionExpired=" + sessionExpired +
                 ", launchTimestamp=" + launchTimestamp +
+                ", highlightLastPlayerName='" + highlightLastPlayerName + '\'' +
                 '}';
     }
 
@@ -135,6 +137,14 @@ public class StatusResponseDto {
 
     public void setLaunchTimestamp(Long launchTimestamp) {
         this.launchTimestamp = launchTimestamp;
+    }
+
+    public String getHighlightLastPlayerName() {
+        return highlightLastPlayerName;
+    }
+
+    public void setHighlightLastPlayerName(String highlightLastPlayerName) {
+        this.highlightLastPlayerName = highlightLastPlayerName;
     }
 
 }

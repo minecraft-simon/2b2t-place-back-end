@@ -59,6 +59,7 @@ public class PlaceBotService {
             long lastPing = Duration.between(placeBot.getLastPing(), now).getSeconds();
             if (lastPing >= 3 && placeBot.getStatus() > 0) {
                 placeBot.setStatus(0);
+                placeBot.setChatBotEnabled(false);
                 inactivePlaceBots.add(placeBot);
             }
         }

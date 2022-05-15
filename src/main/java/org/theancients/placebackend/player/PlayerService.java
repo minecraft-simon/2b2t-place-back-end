@@ -7,6 +7,7 @@ import org.theancients.placebackend.setting.SettingService;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -64,6 +65,19 @@ public class PlayerService {
         return settingService.getBoolean("cooldown_active", false);
     }
 
+    public String getPlayerNameById(long id) {
+        Optional<Player> optionalPlayer = playerRepository.findById(id);
+        if (optionalPlayer.isPresent()) {
+            return optionalPlayer.get().getName();
+        } else {
+            return "";
+        }
+    }
+
+    public boolean isBanned(String playerName) {
+        Optional<Player> optionalPlayer = playerRepository.findByName(playerName);
+        return optionalPlayer.map(Player::isBanned).orElse(true);
+    }
 
 
 }

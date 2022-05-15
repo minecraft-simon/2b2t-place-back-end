@@ -10,6 +10,7 @@ public class PixelGrid {
     private long id;
     @Column(length = 64000)
     private byte[] pixels;
+    private String comment;
 
     @Override
     public String toString() {
@@ -33,5 +34,13 @@ public class PixelGrid {
 
     public void setPixels(byte[] pixels) {
         this.pixels = pixels;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

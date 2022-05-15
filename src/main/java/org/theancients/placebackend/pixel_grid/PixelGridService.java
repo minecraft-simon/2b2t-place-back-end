@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.job.JobService;
+import org.theancients.placebackend.last_pixel_placer.LastPixelPlacerService;
 import org.theancients.placebackend.player.PlayerService;
 import org.theancients.placebackend.recorded_pixel.RecordedPixelService;
 import org.theancients.placebackend.setting.SettingService;
@@ -32,6 +33,9 @@ public class PixelGridService {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private LastPixelPlacerService lastPixelPlacerService;
 
     @Autowired
     private SettingService settingService;
@@ -95,7 +99,15 @@ public class PixelGridService {
             return ResponseEntity.badRequest().body(null);
         }
 
+        if (playerService.isBanned(playerName)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
+        }
+
         if (!settingService.getBoolean("allow_pixel_updates", false)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
+        }
+
+        if (settingService.getBoolean("maintenance_mode", false)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }
 
@@ -117,6 +129,7 @@ public class PixelGridService {
         // save pixel
         synchronized (LOCK) {
             pixelGrid.getPixels()[arrayPos] = pixelDto.getColor();
+            lastPixelPlacerService.update(playerName, pixelDto);
             recordedPixelService.recordPixel(playerName, pixelDto);
             jobService.createJob(pixelDto);
         }

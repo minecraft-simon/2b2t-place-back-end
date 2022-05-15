@@ -7,6 +7,7 @@ import org.theancients.placebackend.authentication.AuthenticationService;
 import org.theancients.placebackend.authentication.PendingAuthentication;
 import org.theancients.placebackend.chat_bot.ChatBotService;
 import org.theancients.placebackend.highlight.HighlightService;
+import org.theancients.placebackend.last_pixel_placer.LastPixelPlacerService;
 import org.theancients.placebackend.pixel_grid.PixelGridService;
 import org.theancients.placebackend.place_bot.PlaceBotService;
 import org.theancients.placebackend.player.PlayerService;
@@ -41,10 +42,13 @@ public class StatusService {
     private ChatBotService chatBotService;
 
     @Autowired
+    private LastPixelPlacerService lastPixelPlacerService;
+
+    @Autowired
     private SettingService settingService;
 
-    public StatusResponseDto statusUpdate(String username, StatusRequestDto statusRequestDto) {
-        String sessionId = statusRequestDto.getSessionId();
+    public StatusResponseDto statusUpdate(String username, StatusRequestDto request) {
+        String sessionId = request.getSessionId();
         boolean sessionValid = anonymousSessionService.refreshSession(sessionId);
         if (sessionValid) {
             StatusResponseDto statusResponseDto = new StatusResponseDto();
@@ -56,8 +60,9 @@ public class StatusService {
             }
 
             statusResponseDto.setPixelGrid(pixelGridService.getPixelGrid());
-            Set<Point> highlights = highlightService.updateHighlight(sessionId, statusRequestDto.getHighlightPos());
+            Set<Point> highlights = highlightService.updateHighlight(sessionId, request.getHighlightPos());
             statusResponseDto.setHighlights(highlights);
+            statusResponseDto.setHighlightLastPlayerName(lastPixelPlacerService.getLastPixelPlacer(request.getHighlightPos()));
             statusResponseDto.setBotPositions(placeBotService.getBotPositions());
             statusResponseDto.setChatBots(chatBotService.getAvailableChatBots());
 

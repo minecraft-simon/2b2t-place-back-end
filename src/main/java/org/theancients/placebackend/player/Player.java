@@ -15,6 +15,7 @@ public class Player {
     private String name;
     private Instant firstSeen;
     private Instant lastSeen;
+    private boolean banned;
 
     public Player() {
     }
@@ -53,6 +54,14 @@ public class Player {
 
     public void setLastSeen(Instant lastSeen) {
         this.lastSeen = lastSeen;
+    }
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
 }
