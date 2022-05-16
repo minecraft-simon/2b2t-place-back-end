@@ -48,7 +48,7 @@ public class ChatBotService {
 
     public Map<String, String> getAvailableChatBots() {
         Map<String, String> map = new HashMap<>();
-        //map.put("2b2t", "OurPlace");
+        map.put("2b2t", "OurPlace");
         map.put("archive", "OurPlace");
         return map;
         //return availableChatBots;
