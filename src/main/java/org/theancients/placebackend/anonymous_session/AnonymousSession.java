@@ -11,7 +11,6 @@ public class AnonymousSession {
     private String sessionId;
     private Instant lastPing;
     private Instant created;
-    private String remoteAddress;
 
     public AnonymousSession() {
     }
@@ -42,14 +41,6 @@ public class AnonymousSession {
 
     public void setCreated(Instant created) {
         this.created = created;
-    }
-
-    public String getRemoteAddress() {
-        return remoteAddress;
-    }
-
-    public void setRemoteAddress(String remoteAddress) {
-        this.remoteAddress = remoteAddress;
     }
 
 }

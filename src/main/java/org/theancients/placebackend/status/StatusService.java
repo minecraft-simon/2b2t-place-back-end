@@ -46,9 +46,9 @@ public class StatusService {
     @Autowired
     private SettingService settingService;
 
-    public StatusResponseDto statusUpdate(String username, StatusRequestDto request, String remoteAddr) {
+    public StatusResponseDto statusUpdate(String username, StatusRequestDto request) {
         String sessionId = request.getSessionId();
-        boolean sessionValid = anonymousSessionService.refreshSession(sessionId, remoteAddr);
+        boolean sessionValid = anonymousSessionService.refreshSession(sessionId);
         if (sessionValid) {
             StatusResponseDto statusResponseDto = new StatusResponseDto();
 
