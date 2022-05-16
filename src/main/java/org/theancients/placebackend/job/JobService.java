@@ -29,6 +29,7 @@ public class JobService {
         for (Job job : jobs) {
             if (!activeBotIds.contains(job.getBotId())) {
                 job.setBotId(0);
+                job.setAssignedAt(null);
                 updatedJobs.add(job);
             }
         }
