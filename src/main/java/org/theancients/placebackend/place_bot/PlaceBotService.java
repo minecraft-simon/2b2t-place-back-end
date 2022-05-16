@@ -1,6 +1,7 @@
 package org.theancients.placebackend.place_bot;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.chat_bot.ChatBotService;
@@ -17,18 +18,21 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class PlaceBotService {
 
-    @Autowired
-    private PlaceBotRepository placeBotRepository;
+    private final PlaceBotRepository placeBotRepository;
 
-    @Autowired
-    private JobService jobService;
+    private final JobService jobService;
 
-    @Autowired
-    private ChatBotService chatBotService;
+    private final ChatBotService chatBotService;
 
     private static final Object LOCK = new Object();
 
     private Set<ActivePlaceBot> activePlaceBots = new HashSet<>();
+
+    public PlaceBotService(PlaceBotRepository placeBotRepository, @Lazy JobService jobService, ChatBotService chatBotService) {
+        this.placeBotRepository = placeBotRepository;
+        this.jobService = jobService;
+        this.chatBotService = chatBotService;
+    }
 
     @Scheduled(fixedRate = 1000)
     private void processInactiveBots() {
@@ -122,6 +126,16 @@ public class PlaceBotService {
         synchronized (LOCK) {
             activePlaceBots.remove(activePlaceBot);
             activePlaceBots.add(activePlaceBot);
+        }
+    }
+
+    public Set<Long> getActiveBotIds() {
+        synchronized (LOCK) {
+            Set<Long> activeBotIds = new HashSet<>();
+            for (ActivePlaceBot activePlaceBot : activePlaceBots) {
+                activeBotIds.add(activePlaceBot.getId());
+            }
+            return activeBotIds;
         }
     }
 

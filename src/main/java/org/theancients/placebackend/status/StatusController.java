@@ -15,7 +15,8 @@ public class StatusController {
     private StatusService statusService;
 
     @PutMapping
-    public ResponseEntity<StatusResponseDto> statusUpdate(Principal principal, @RequestBody StatusRequestDto statusRequestDto) {
+    public ResponseEntity<StatusResponseDto> statusUpdate(Principal principal,
+                                                          @RequestBody StatusRequestDto statusRequestDto) {
         String username = principal == null ? null : principal.getName();
         StatusResponseDto statusResponseDto = statusService.statusUpdate(username, statusRequestDto);
         if (statusResponseDto != null) {

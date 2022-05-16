@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.pixel_grid.PixelDto;
+import org.theancients.placebackend.place_bot.PlaceBotService;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,11 +16,23 @@ public class JobService {
     @Autowired
     private JobRepository jobRepository;
 
+    @Autowired
+    private PlaceBotService placeBotService;
+
     private static final Object LOCK = new Object();
 
-    @Scheduled(fixedRate = 1000)
-    private void unassignJobs() {
-
+    @Scheduled(fixedRate = 10000)
+    private void cleanJobAssignments() {
+        List<Job> jobs = jobRepository.findAll();
+        List<Job> updatedJobs = new ArrayList<>();
+        Set<Long> activeBotIds = placeBotService.getActiveBotIds();
+        for (Job job : jobs) {
+            if (!activeBotIds.contains(job.getBotId())) {
+                job.setBotId(0);
+                updatedJobs.add(job);
+            }
+        }
+        jobRepository.saveAll(updatedJobs);
     }
 
     public void createJob(PixelDto pixelDto) {
