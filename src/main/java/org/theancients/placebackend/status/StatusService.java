@@ -14,7 +14,6 @@ import org.theancients.placebackend.player.PlayerService;
 import org.theancients.placebackend.setting.SettingService;
 
 import java.awt.*;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -47,9 +46,9 @@ public class StatusService {
     @Autowired
     private SettingService settingService;
 
-    public StatusResponseDto statusUpdate(String username, StatusRequestDto request) {
+    public StatusResponseDto statusUpdate(String username, StatusRequestDto request, String remoteAddr) {
         String sessionId = request.getSessionId();
-        boolean sessionValid = anonymousSessionService.refreshSession(sessionId);
+        boolean sessionValid = anonymousSessionService.refreshSession(sessionId, remoteAddr);
         if (sessionValid) {
             StatusResponseDto statusResponseDto = new StatusResponseDto();
 

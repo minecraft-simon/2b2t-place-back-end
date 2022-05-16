@@ -18,6 +18,7 @@ public class PlaceBot {
     private String position;
     private boolean chatBotEnabled;
     private Instant lastPing;
+    private boolean banned;
 
     public PlaceBot() {
 
@@ -37,6 +38,7 @@ public class PlaceBot {
                 ", position='" + position + '\'' +
                 ", chatBotEnabled=" + chatBotEnabled +
                 ", lastPing=" + lastPing +
+                ", banned=" + banned +
                 '}';
     }
 
@@ -94,6 +96,14 @@ public class PlaceBot {
 
     public void setLastPing(Instant lastPing) {
         this.lastPing = lastPing;
+    }
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
 }

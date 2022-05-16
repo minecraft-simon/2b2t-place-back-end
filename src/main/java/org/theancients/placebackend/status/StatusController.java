@@ -2,11 +2,9 @@ package org.theancients.placebackend.status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @RestController
@@ -17,9 +15,13 @@ public class StatusController {
     private StatusService statusService;
 
     @PutMapping
-    public ResponseEntity<StatusResponseDto> statusUpdate(Principal principal, @RequestBody StatusRequestDto statusRequestDto) {
+    public ResponseEntity<StatusResponseDto> statusUpdate(
+                                                          HttpServletRequest request,
+                                                          Principal principal,
+                                                          @RequestBody StatusRequestDto statusRequestDto) {
+
         String username = principal == null ? null : principal.getName();
-        StatusResponseDto statusResponseDto = statusService.statusUpdate(username, statusRequestDto);
+        StatusResponseDto statusResponseDto = statusService.statusUpdate(username, statusRequestDto, request.getRemoteAddr());
         if (statusResponseDto != null) {
             return ResponseEntity.ok(statusResponseDto);
         } else {

@@ -30,7 +30,7 @@ public class AnonymousSessionService {
         anonymousSessionRepository.deleteAll(toDelete);
     }
 
-    public boolean refreshSession(String sessionId) {
+    public boolean refreshSession(String sessionId, String remoteAddr) {
         if (sessionId == null || sessionId.length() < 32 || sessionId.length() > 64 || !StringUtils.isAlphanumeric(sessionId)) {
             return false;
         }
@@ -44,6 +44,7 @@ public class AnonymousSessionService {
 
         anonymousSession.setSessionId(sessionId);
         anonymousSession.setLastPing(now);
+        anonymousSession.setRemoteAddress(remoteAddr);
         anonymousSessionRepository.save(anonymousSession);
         return true;
     }
