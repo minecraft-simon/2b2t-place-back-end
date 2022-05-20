@@ -66,7 +66,7 @@ public class StatusService {
             statusResponseDto.setChatBots(chatBotService.getAvailableChatBots());
 
             statusResponseDto.setPollingDelay(settingService.getInt("frontend_polling_delay", 1000));
-            statusResponseDto.setCooldownSeconds(playerService.getCooldownSeconds());
+            statusResponseDto.setCooldownSeconds(playerService.getCooldownSeconds(username));
             statusResponseDto.setCooldownSecondsLeft(playerService.getCooldownSecondsLeft(username));
 
             statusResponseDto.setMaintenanceMode(settingService.getBoolean("maintenance_mode", false));

@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.job.JobService;
 import org.theancients.placebackend.last_pixel_placer.LastPixelPlacerService;
+import org.theancients.placebackend.player.Player;
 import org.theancients.placebackend.player.PlayerService;
 import org.theancients.placebackend.recorded_pixel.RecordedPixelService;
 import org.theancients.placebackend.setting.SettingService;
@@ -99,7 +100,12 @@ public class PixelGridService {
             return ResponseEntity.badRequest().body(null);
         }
 
-        if (playerService.isBanned(playerName)) {
+        Player player = playerService.getPlayer(playerName);
+        if (player == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        if (player.isBanned()) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }
 
@@ -112,19 +118,21 @@ public class PixelGridService {
         }
 
         // check if cooldown is active
-        if (playerService.playerHasCooldown(playerName)) {
+        if (playerService.playerHasCooldown(player)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }
 
         int arrayPos = pixelDto.getX() * 128 + pixelDto.getY();
         byte existingColor = pixelGrid.getPixels()[arrayPos];
         if (existingColor == pixelDto.getColor()) {
-            PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, 0);
+            PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, 0, "");
             return ResponseEntity.ok(pixelUpdateResponseDto);
         }
 
         // set cooldown
-        int cooldownSeconds = playerService.startCooldown(playerName);
+        playerService.startCooldown(playerName);
+        int cooldownSeconds = playerService.getCooldownSecondsLeft(player);
+        String cooldownMessage = playerService.getCooldownMessage(player);
 
         // save pixel
         synchronized (LOCK) {
@@ -134,7 +142,7 @@ public class PixelGridService {
             jobService.createJob(pixelDto);
         }
 
-        PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, cooldownSeconds);
+        PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, cooldownSeconds, cooldownMessage);
 
         return ResponseEntity.ok(pixelUpdateResponseDto);
     }

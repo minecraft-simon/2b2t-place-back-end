@@ -8,12 +8,14 @@ public class PixelUpdateResponseDto {
     private int y;
     private byte color;
     private int cooldownSeconds;
+    private String message;
 
-    public PixelUpdateResponseDto(PixelDto pixelDto, int cooldownSeconds) {
+    public PixelUpdateResponseDto(PixelDto pixelDto, int cooldownSeconds, String message) {
         x = pixelDto.getX();
         y = pixelDto.getY();
         color = pixelDto.getColor();
         this.cooldownSeconds = cooldownSeconds;
+        this.message = message;
     }
 
     @Override
@@ -58,4 +60,11 @@ public class PixelUpdateResponseDto {
         this.cooldownSeconds = cooldownSeconds;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

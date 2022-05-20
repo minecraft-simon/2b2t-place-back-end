@@ -16,6 +16,8 @@ public class Player {
     private Instant firstSeen;
     private Instant lastSeen;
     private boolean banned;
+    private int customCooldown;
+    private int accountLimitation; // 0 = none, 1 = known bot, 2 = unknown bot, 3 = restricted symbol
 
     public Player() {
     }
@@ -62,6 +64,22 @@ public class Player {
 
     public void setBanned(boolean banned) {
         this.banned = banned;
+    }
+
+    public int getCustomCooldown() {
+        return customCooldown;
+    }
+
+    public void setCustomCooldown(int customCooldown) {
+        this.customCooldown = customCooldown;
+    }
+
+    public int getAccountLimitation() {
+        return accountLimitation;
+    }
+
+    public void setAccountLimitation(int accountLimitation) {
+        this.accountLimitation = accountLimitation;
     }
 
 }
