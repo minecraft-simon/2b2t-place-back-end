@@ -100,10 +100,8 @@ public class PixelGridService {
             return ResponseEntity.badRequest().body(null);
         }
 
+        playerService.createPlayer(playerName);
         Player player = playerService.getPlayer(playerName);
-        if (player == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
 
         if (player.isBanned()) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
@@ -131,8 +129,8 @@ public class PixelGridService {
 
         // set cooldown
         playerService.startCooldown(playerName);
-        int cooldownSeconds = playerService.getCooldownSecondsLeft(player);
-        String cooldownMessage = playerService.getCooldownMessage(player);
+        int cooldownSeconds = playerService.getCooldownSecondsLeft(playerName);
+        String cooldownMessage = playerService.getCooldownMessage(playerName);
 
         // save pixel
         synchronized (LOCK) {

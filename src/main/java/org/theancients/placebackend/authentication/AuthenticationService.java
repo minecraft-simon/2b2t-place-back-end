@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.anonymous_session.AnonymousSessionRepository;
+import org.theancients.placebackend.player.PlayerService;
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
@@ -23,6 +24,9 @@ public class AuthenticationService {
 
     @Autowired
     private AnonymousSessionRepository anonymousSessionRepository;
+
+    @Autowired
+    private PlayerService playerService;
 
     @Autowired
     private SecretKey secretKey;
@@ -80,6 +84,7 @@ public class AuthenticationService {
                 pendingAuth.setIdentity(player);
                 pendingAuth.setAuthToken(generateAuthToken(player));
                 pendingAuthenticationRepository.save(pendingAuth);
+                playerService.createPlayer(player);
             }
         }
     }
