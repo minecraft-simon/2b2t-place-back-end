@@ -83,4 +83,18 @@ public class HighlightService {
         return new HashSet<>(activeHighlights);
     }
 
+    public List<Highlight> getHighlightsForVisualization() {
+        List<Highlight> allHighlights = highlightRepository.findAll();
+        List<Highlight> filtered = new ArrayList<>();
+        Instant now = Instant.now();
+        for (Highlight highlight : allHighlights) {
+            long lastChange = Duration.between(highlight.getLastChange(), now).getSeconds();
+            if (lastChange <= 60) {
+                highlight.setId("");
+                filtered.add(highlight);
+            }
+        }
+        return filtered;
+    }
+
 }

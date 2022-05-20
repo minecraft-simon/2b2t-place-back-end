@@ -11,6 +11,9 @@ public class CurrentStateDto {
     private long serverTime = Instant.now().getEpochSecond();
     private List<Job> jobs;
     private List<Highlight> highlights;
+    private int authenticatedPlayers;
+    private int cooldownSeconds;
+    private int botsActive;
 
     public long getServerTime() {
         return serverTime;
@@ -32,4 +35,27 @@ public class CurrentStateDto {
         this.highlights = highlights;
     }
 
+    public int getAuthenticatedPlayers() {
+        return authenticatedPlayers;
+    }
+
+    public void setAuthenticatedPlayers(int authenticatedPlayers) {
+        this.authenticatedPlayers = authenticatedPlayers;
+    }
+
+    public int getCooldownSeconds() {
+        return cooldownSeconds;
+    }
+
+    public void setCooldownSeconds(int cooldownSeconds) {
+        this.cooldownSeconds = cooldownSeconds;
+    }
+
+    public int getBotsActive() {
+        return botsActive;
+    }
+
+    public void setBotsActive(int botsActive) {
+        this.botsActive = botsActive;
+    }
 }
