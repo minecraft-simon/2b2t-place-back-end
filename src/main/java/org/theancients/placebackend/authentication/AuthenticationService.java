@@ -84,7 +84,7 @@ public class AuthenticationService {
                 pendingAuth.setIdentity(player);
                 pendingAuth.setAuthToken(generateAuthToken(player));
                 pendingAuthenticationRepository.save(pendingAuth);
-                playerService.createPlayer(player);
+                playerService.createOrGetPlayer(player);
             }
         }
     }

@@ -14,7 +14,6 @@ import org.theancients.placebackend.recorded_pixel.RecordedPixelService;
 import org.theancients.placebackend.setting.SettingService;
 
 import javax.annotation.PostConstruct;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -100,8 +99,7 @@ public class PixelGridService {
             return ResponseEntity.badRequest().body(null);
         }
 
-        playerService.createPlayer(playerName);
-        Player player = playerService.getPlayer(playerName);
+        Player player = playerService.createOrGetPlayer(playerName);
 
         if (player.isBanned()) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
@@ -129,8 +127,8 @@ public class PixelGridService {
 
         // set cooldown
         playerService.startCooldown(playerName);
-        int cooldownSeconds = playerService.getCooldownSecondsLeft(playerName);
-        String cooldownMessage = playerService.getCooldownMessage(playerName);
+        int cooldownSeconds = playerService.getCooldownSecondsLeft(player);
+        String cooldownMessage = playerService.getCooldownMessage(player);
 
         // save pixel
         synchronized (LOCK) {

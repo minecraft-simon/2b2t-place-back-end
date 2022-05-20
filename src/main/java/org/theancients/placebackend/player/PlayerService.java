@@ -33,13 +33,17 @@ public class PlayerService {
         return playerRepository.findByName(playerName).orElse(null);
     }
 
-    public void createPlayer(String playerName) {
-        if (!playerRepository.existsByName(playerName)) {
+    public Player createOrGetPlayer(String playerName) {
+        Optional<Player> optionalPlayer = playerRepository.findByName(playerName);
+        if (optionalPlayer.isEmpty()) {
             Instant now = Instant.now();
             Player player = new Player();
             player.setName(playerName);
+            player.setFirstSeen(now);
             player.setLastSeen(now);
-            playerRepository.save(player);
+            return playerRepository.save(player);
+        } else {
+            return optionalPlayer.get();
         }
     }
 
@@ -115,8 +119,7 @@ public class PlayerService {
         }
     }
 
-    public String getCooldownMessage(String playerName) {
-        Player player = playerRepository.findByName(playerName).orElse(new Player());
+    public String getCooldownMessage(Player player) {
         if (player.getAccountLimitation() == 1) {
             return "This account has an increased cooldown because it has been identified as a bot that was used too aggressively. If you think this is unjustified, message us on Discord: https://discord.com/invite/AtkWp8DBtm";
         }
