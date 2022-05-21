@@ -25,7 +25,7 @@ public class HighlightService {
         for (Highlight highlight : allHighlights) {
             long lastPing = Duration.between(highlight.getLastPing(), now).getSeconds();
             long lastChange = Duration.between(highlight.getLastChange(), now).getSeconds();
-            if (lastPing > 12) {
+            if (lastPing > 300) {
                 toDelete.add(highlight);
             }
         }
@@ -89,7 +89,7 @@ public class HighlightService {
         Instant now = Instant.now();
         for (Highlight highlight : allHighlights) {
             long lastChange = Duration.between(highlight.getLastChange(), now).getSeconds();
-            if (lastChange <= 60) {
+            if (lastChange <= 300) {
                 highlight.setId("");
                 filtered.add(highlight);
             }
