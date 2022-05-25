@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.theancients.placebackend.pixel_grid.PixelDto;
 import org.theancients.placebackend.player.PlayerService;
+import org.theancients.placebackend.recorded_pixel.ScoreDto;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Optional;
 
 @Service

@@ -6,6 +6,8 @@ import org.theancients.placebackend.setting.SettingService;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,5 +131,13 @@ public class PlayerService {
         return "";
     }
 
+    public Map<Long, String> getPlayerMap() {
+        List<Player> players = playerRepository.findAll();
+        HashMap<Long, String> playerNames = new HashMap<>();
+        for (Player player : players) {
+            playerNames.put(player.getId(), player.getName());
+        }
+        return playerNames;
+    }
 
 }

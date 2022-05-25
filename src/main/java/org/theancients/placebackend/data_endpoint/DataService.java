@@ -33,7 +33,6 @@ public class DataService {
         currentStateDto.setAuthenticatedPlayers((int) playerRepository.count());
         currentStateDto.setCooldownSeconds(playerService.getCooldownSeconds());
         currentStateDto.setBotsActive(placeBotService.getActiveBotIds().size());
-
         return currentStateDto;
     }
 
