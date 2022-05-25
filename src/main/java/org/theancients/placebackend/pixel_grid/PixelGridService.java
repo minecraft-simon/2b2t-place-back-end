@@ -1,11 +1,14 @@
 package org.theancients.placebackend.pixel_grid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.theancients.placebackend.job.JobService;
 import org.theancients.placebackend.last_pixel_placer.LastPixelPlacerService;
 import org.theancients.placebackend.player.Player;
@@ -14,6 +17,8 @@ import org.theancients.placebackend.recorded_pixel.RecordedPixelService;
 import org.theancients.placebackend.setting.SettingService;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,12 +48,16 @@ public class PixelGridService {
     @Value("${application.pixelGridId:2}")
     private long pixelGridId;
 
+    @Value("${application.endgameTemplateId}")
+    private long endgameTemplateId;
+
     private PixelGrid pixelGrid;
+    private byte[] endgameTemplate;
 
     private static final Object LOCK = new Object();
 
     @PostConstruct
-    private void init() {
+    private void init() throws IOException {
         Optional<PixelGrid> optionalPixelGrid = pixelGridRepository.findById(pixelGridId);
         if (optionalPixelGrid.isPresent()) {
             this.pixelGrid = optionalPixelGrid.get();
@@ -60,6 +69,27 @@ public class PixelGridService {
             pixelGrid.setPixels(pixels);
             this.pixelGrid = pixelGrid;
         }
+
+        //loadTemplateFromJson();
+        loadEndgameTemplate();
+    }
+
+    private void loadTemplateFromJson() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        File file = ResourceUtils.getFile("classpath:sprite.json");
+        PixelDto[] pixelDtos = objectMapper.readValue(file, PixelDto[].class);
+        byte[] pixels = new byte[16384];
+        for (int i = 0; i < pixelDtos.length; i++) {
+            PixelDto pixelDto = pixelDtos[i];
+            pixels[i] = pixelDto.getColor();
+        }
+        PixelGrid pixelGrid = pixelGridRepository.findById(6L).get();
+        pixelGrid.setPixels(pixels);
+        pixelGridRepository.save(pixelGrid);
+    }
+
+    private void loadEndgameTemplate() {
+        endgameTemplate = pixelGridRepository.findById(endgameTemplateId).get().getPixels();
     }
 
     @Scheduled(fixedRate = 1000)
@@ -119,6 +149,12 @@ public class PixelGridService {
         }
 
         int arrayPos = pixelDto.getX() * 128 + pixelDto.getY();
+
+        // when endgame-mode is activated, every pixel's color will get replace with the template pixel color
+        if (settingService.getBoolean("activate_endgame", false)) {
+            pixelDto.setColor(endgameTemplate[arrayPos]);
+        }
+
         byte existingColor = pixelGrid.getPixels()[arrayPos];
         if (existingColor == pixelDto.getColor()) {
             PixelUpdateResponseDto pixelUpdateResponseDto = new PixelUpdateResponseDto(pixelDto, 0, "");

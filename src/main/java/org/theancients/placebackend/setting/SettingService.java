@@ -29,6 +29,7 @@ public class SettingService {
         initSetting("create_jobs_from_pixel_grid", "false");
         initSetting("allow_pixel_updates", "false");
         initSetting("launch_timestamp", "1652652000");
+        initSetting("activate_endgame", "false");
     }
 
     private void initSetting(String name, String value) {
